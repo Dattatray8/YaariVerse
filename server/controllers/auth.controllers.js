@@ -1,32 +1,30 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import generateToken from "../config/token.js";
+import { generateToken } from "../config/token.js";
 
 export const signUp = async (req, res) => {
   try {
     const { name, userName, email, password } = req.body;
-    const findUserEmail = User.findOne({ email });
+    const findUserEmail = await User.findOne({ email });
     if (findUserEmail) {
       return res
         .status(400)
-        .json({ sucess: false, message: "This email user already exists!" });
+        .json({ success: false, message: "This email user already exists!" });
     }
-    const findUsersUserName = User.findOne({ userName });
+    const findUsersUserName = await User.findOne({ userName });
     if (findUsersUserName) {
       return res
         .status(400)
-        .json({ sucess: false, message: "Username already exists" });
+        .json({ success: false, message: "Username already exists" });
     }
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({
-          message: false,
-          message: "Password must be atleast 6 characters.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Password must be atleast 6 characters.",
+      });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = User.create({
+    const user = await User.create({
       name,
       userName,
       email,
@@ -41,10 +39,10 @@ export const signUp = async (req, res) => {
     });
     return res
       .status(201)
-      .json({ sucess: true, message: "User created Successfully" });
+      .json({ suscess: true, message: "User created Successfully" });
   } catch (error) {
     return res.status(500).json({
-      sucess: false,
+      sucsess: false,
       message: "Failed to SignUp",
       error: error.message,
     });
@@ -54,17 +52,17 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
   try {
     const { userName, password } = req.body;
-    const findUsersUserName = User.findOne({ userName });
+    const findUsersUserName = await User.findOne({ userName });
     if (!findUsersUserName) {
       return res
         .status(400)
-        .json({ sucess: false, message: "User not exists" });
+        .json({ success: false, message: "User not exists" });
     }
     const passwordMatch = bcrypt.compare(password, findUsersUserName.password);
     if (!passwordMatch) {
       return res
         .status(400)
-        .json({ sucess: false, message: "Incorrect Password" });
+        .json({ success: false, message: "Incorrect Password" });
     }
     const token = await generateToken(findUsersUserName._id);
     res.cookie("token", token, {
@@ -75,11 +73,26 @@ export const signIn = async (req, res) => {
     });
     return res
       .status(200)
-      .json({ sucess: true, message: "User Login Successfully" });
+      .json({ success: true, message: "User Login Successfully" });
   } catch (error) {
     return res.status(500).json({
-      sucess: false,
+      success: false,
       message: "Failed to SignIn",
+      error: error.message,
+    });
+  }
+};
+
+export const signOut = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    return res
+      .status(200)
+      .json({ success: true, message: "Sign out successfully" });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to SignOut",
       error: error.message,
     });
   }
