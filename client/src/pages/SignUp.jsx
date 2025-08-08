@@ -1,6 +1,10 @@
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { serverUrl } from "../App";
+import { ThreeDots } from "react-loader-spinner";
 
 function SignUp() {
   const [inputClicked, setInputClicked] = useState({
@@ -10,14 +14,40 @@ function SignUp() {
     password: false,
   });
   const [showPassword, setShowPassword] = useState(false);
+  const navigation = useNavigate();
+  const [formValue, setFormValue] = useState({
+    name: "",
+    userName: "",
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      await axios
+        .post(serverUrl + "/api/auth/signup", formValue, {
+          withCredentials: true,
+        })
+        .then((e) => {
+          console.log(e);
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center w-screen h-screen bg-[#181817]">
-      <div className="w-[20em] h-[30em] bg-[#ededec] rounded-2xl">
+      <div className="w-[20em] h-[32em] bg-[#ededec] rounded-2xl">
         <div className="flex justify-center items-center mt-4">
           <p className="text-2xl font-semibold text-[#22292e]">SignUp to</p>
           <img src={logo} alt="Yaari verse logo" className="h-12 w-fit mt-1" />
         </div>
-        <div className="flex justify-center items-center flex-col mt-10 gap-8">
+        <div className="flex justify-center items-center flex-col mt-6 gap-8">
           <div
             className="relative flex items-center justify-start w-[90%] h-12 rounded-2xl border-2 border-[#181817]"
             onClick={() => setInputClicked({ ...inputClicked, name: true })}
@@ -35,6 +65,10 @@ function SignUp() {
               id="name"
               className="w-full h-full rounded-2xl px-5 outline-none border-none"
               required
+              value={formValue.name}
+              onChange={(e) =>
+                setFormValue({ ...formValue, name: e.target.value })
+              }
             />
           </div>
           <div
@@ -54,6 +88,10 @@ function SignUp() {
               id="username"
               className="w-full h-full rounded-2xl px-5 outline-none border-none"
               required
+              value={formValue.userName}
+              onChange={(e) =>
+                setFormValue({ ...formValue, userName: e.target.value })
+              }
             />
           </div>
           <div
@@ -73,6 +111,10 @@ function SignUp() {
               id="email"
               className="w-full h-full rounded-2xl px-5 outline-none border-none"
               required
+              value={formValue.email}
+              onChange={(e) =>
+                setFormValue({ ...formValue, email: e.target.value })
+              }
             />
           </div>
           <div
@@ -92,6 +134,10 @@ function SignUp() {
               id="password"
               className="w-full h-full rounded-2xl px-5 outline-none border-none"
               required
+              value={formValue.password}
+              onChange={(e) =>
+                setFormValue({ ...formValue, password: e.target.value })
+              }
             />
             {showPassword ? (
               <EyeOff
@@ -104,6 +150,28 @@ function SignUp() {
                 onClick={() => setShowPassword(!showPassword)}
               />
             )}
+          </div>
+          <div className="flex items-center flex-col gap-2">
+            <button
+              className="bg-[#181817] text-white py-2 px-16 rounded-full cursor-pointer hover:bg-[#181817cd] transition-all duration-300"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? (
+                <ThreeDots width={50} height={25} color="white" />
+              ) : (
+                "SignUp"
+              )}
+            </button>
+            <p>
+              Already Have an account ?{" "}
+              <span
+                onClick={() => navigation("/signin")}
+                className="hover:underline text-blue-500 cursor-pointer"
+              >
+                Sign In
+              </span>
+            </p>
           </div>
         </div>
       </div>
