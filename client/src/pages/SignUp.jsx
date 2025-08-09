@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { ThreeDots } from "react-loader-spinner";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 
 function SignUp() {
   const [inputClicked, setInputClicked] = useState({
@@ -22,7 +25,8 @@ function SignUp() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState(false);
+  const dispatch = useDispatch();
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -33,10 +37,13 @@ function SignUp() {
         .then((e) => {
           console.log(e);
           setLoading(false);
+          dispatch(setUserData(e?.data?.user));
+          navigation("/");
         });
     } catch (error) {
       console.log(error);
       setLoading(false);
+      setErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -175,6 +182,7 @@ function SignUp() {
           </div>
         </div>
       </div>
+      {toast.error(errorMessage)}
     </div>
   );
 }

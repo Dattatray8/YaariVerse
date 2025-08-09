@@ -3,6 +3,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ForgotPassword() {
   const [step, setStep] = useState(1);
@@ -18,6 +19,7 @@ function ForgotPassword() {
   });
   const [loading, setLoading] = useState(false);
   const navigation = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(false);
   const handleStep1 = async () => {
     try {
       setLoading(true);
@@ -35,6 +37,7 @@ function ForgotPassword() {
         });
     } catch (error) {
       setLoading(false);
+      setErrorMessage(error?.response?.data?.message);
       console.log(error);
     }
   };
@@ -75,7 +78,7 @@ function ForgotPassword() {
         .then((e) => {
           setLoading(false);
           console.log(e);
-          navigation('/signin')
+          navigation("/signin");
         });
     } catch (error) {
       setLoading(false);
@@ -240,6 +243,7 @@ function ForgotPassword() {
           </div>
         )}
       </div>
+      {toast.error(errorMessage)}
     </div>
   );
 }

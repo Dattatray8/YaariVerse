@@ -40,7 +40,7 @@ export const signUp = async (req, res) => {
     });
     return res
       .status(201)
-      .json({ suscess: true, message: "User created Successfully" });
+      .json({ suscess: true, message: "User created Successfully", user });
   } catch (error) {
     return res.status(500).json({
       sucsess: false,
@@ -75,9 +75,11 @@ export const signIn = async (req, res) => {
       secure: false,
       sameSite: "Strict",
     });
-    return res
-      .status(200)
-      .json({ success: true, message: "User Login Successfully" });
+    return res.status(200).json({
+      success: true,
+      message: "User Login Successfully",
+      findUsersUserName,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
