@@ -1,9 +1,13 @@
 import { CirclePlus, Search, Video } from "lucide-react";
 import user from "../assets/user.png";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Navbar() {
+  const navigation = useNavigate();
+  const { userData } = useSelector((state) => state.user);
   return (
-    <div className="w-full lg:w-[50%] h-14 lg:h-16 bg-[#181817] flex justify-around items-center fixed bottom-0">
+    <div className="w-full lg:w-[50%] h-14 lg:h-16 bg-[#181817] flex justify-around items-center fixed bottom-0 lg:border-none border-t border-[#ededec]">
       <div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +33,7 @@ function Navbar() {
       <div>
         <Video className="text-white cursor-pointer" />
       </div>
-      <div>
+      <div onClick={() => navigation(`/profile/${userData?.userName}`)}>
         <div className="cursor-pointer">
           <img
             src={user}

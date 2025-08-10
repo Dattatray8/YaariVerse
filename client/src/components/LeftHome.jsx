@@ -33,7 +33,7 @@ function LeftHome() {
         <Heart className="text-white" />
       </div>
       <div className="flex items-center gap-4 px-4 justify-center">
-        <div className="w-[20%] cursor-pointer border-2 border-[#181817]">
+        <div className="w-[20%] cursor-pointer">
           <img
             src={userData.profileImage || user}
             alt="User Image"

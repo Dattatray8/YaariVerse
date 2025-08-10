@@ -6,6 +6,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Home from "../pages/Home";
 import useFetchUser from "../hooks/useFetchUser";
 import useSuggestedUsers from "../hooks/useSuggestedUsers";
+import Profile from "../pages/Profile";
 
 function AppRoutes() {
   useFetchUser();
@@ -23,6 +24,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route path="/profile/:userName" element={<Profile />} />
     </Routes>
   );
 }

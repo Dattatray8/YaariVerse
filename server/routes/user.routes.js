@@ -18,6 +18,6 @@ userRouter.post(
   upload.single("profileImage"),
   editProfile
 );
-userRouter.get("/profile/:userName", getProfile);
+userRouter.get("/profile/:userName", isAuth, getProfile);
 
 export default userRouter;

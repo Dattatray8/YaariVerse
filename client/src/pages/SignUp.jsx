@@ -182,7 +182,7 @@ function SignUp() {
           </div>
         </div>
       </div>
-      {toast.error(errorMessage)}
+      {errorMessage && toast.error(errorMessage)}
     </div>
   );
 }
