@@ -10,3 +10,12 @@
     margin-bottom: 0.5rem;
   }
 }
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+* ::-webkit-scrollbar {
+  display: none;
+}

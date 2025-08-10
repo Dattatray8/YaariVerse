@@ -5,9 +5,11 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "../pages/Home";
 import useFetchUser from "../hooks/useFetchUser";
+import useSuggestedUsers from "../hooks/useSuggestedUsers";
 
 function AppRoutes() {
   useFetchUser();
+  useSuggestedUsers();
   return (
     <Routes>
       <Route path="/signup" element={<SignUp />} />

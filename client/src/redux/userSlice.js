@@ -5,6 +5,7 @@ const userSlice = createSlice({
   initialState: {
     userData: null,
     loading: true,
+    suggestedUsers: null,
   },
   reducers: {
     setUserData: (state, action) => {
@@ -14,8 +15,11 @@ const userSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setSuggestedUsers: (state, action) => {
+      state.suggestedUsers = action.payload;
+    },
   },
 });
 
-export const { setUserData, setLoading } = userSlice.actions;
+export const { setUserData, setLoading, setSuggestedUsers } = userSlice.actions;
 export default userSlice.reducer;
