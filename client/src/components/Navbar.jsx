@@ -11,7 +11,7 @@ function Navbar() {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-6 h-6 text-white"
+          className="w-6 h-6 text-white cursor-pointer"
         >
           <path
             strokeLinecap="round"
@@ -21,13 +21,13 @@ function Navbar() {
         </svg>
       </div>
       <div>
-        <Search className="text-white" />
+        <Search className="text-white cursor-pointer" />
       </div>
       <div>
-        <CirclePlus className="text-white" />
+        <CirclePlus className="text-white cursor-pointer" />
       </div>
       <div>
-        <Video className="text-white" />
+        <Video className="text-white cursor-pointer" />
       </div>
       <div>
         <div className="cursor-pointer">
