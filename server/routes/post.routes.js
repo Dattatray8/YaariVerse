@@ -7,7 +7,7 @@ import {
   like,
   saved,
   uploadPost,
-} from "../controllers/post.controllers";
+} from "../controllers/post.controllers.js";
 
 const postRouter = express(Router());
 

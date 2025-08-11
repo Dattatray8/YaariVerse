@@ -38,13 +38,13 @@ export const uploadPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find({ author: req.userId }).populate(
+    const posts = await Post.find({}).populate(
       "author",
       "name userName profileImage"
     );
     return res
       .status(200)
-      .json({ success: true, message: "Posts get post successfully", posts });
+      .json({ success: true, message: "Posts get successfully", posts });
   } catch (error) {
     return res.status(500).json({
       success: false,
