@@ -83,7 +83,7 @@ function Profile() {
           <img
             src={profileData?.profileImage || user}
             alt="User Image"
-            className="object-cover w-full rounded-full"
+            className="object-cover w-full h-full rounded-full"
           />
         </div>
         <div className="flex flex-col gap-1 justify-center">
@@ -116,7 +116,10 @@ function Profile() {
       )}
       {isCurrentUser ? (
         <div className="w-full lg:px-[30%] flex justify-center items-center">
-          <button className="bg-white font-semibold py-2 w-3/4 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700">
+          <button
+            className="bg-white font-semibold py-2 w-3/4 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700"
+            onClick={() => navigation("/editprofile")}
+          >
             Edit Profile
           </button>
         </div>

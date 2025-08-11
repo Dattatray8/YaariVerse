@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 export const serverUrl = "http://localhost:8000";
 function App() {
   return (
-    <div>
+    <div className="overflow-hidden">
       <AppRoutes />
       <ToastContainer />
     </div>

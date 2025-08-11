@@ -8,7 +8,7 @@ function Navbar() {
   const { userData } = useSelector((state) => state.user);
   return (
     <div className="w-full lg:w-[50%] h-14 lg:h-16 bg-[#181817] flex justify-around items-center fixed bottom-0 lg:border-none border-t border-[#ededec]">
-      <div>
+      <div onClick={() => navigation("/")}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -36,9 +36,9 @@ function Navbar() {
       <div onClick={() => navigation(`/profile/${userData?.userName}`)}>
         <div className="cursor-pointer">
           <img
-            src={user}
+            src={userData?.profileImage || user}
             alt="User Image"
-            className="object-cover w-8 rounded-full"
+            className="object-cover w-8 h-8 rounded-full"
           />
         </div>
       </div>

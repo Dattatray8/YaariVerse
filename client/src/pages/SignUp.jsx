@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +46,11 @@ function SignUp() {
       setErrorMessage(error?.response?.data?.message);
     }
   };
-
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, []);
   return (
     <div className="flex justify-center items-center w-screen h-screen bg-[#181817]">
       <div className="w-[20em] h-[32em] bg-[#ededec] rounded-2xl drop-shadow-lg drop-shadow-white flex flex-col justify-center">
@@ -182,7 +186,6 @@ function SignUp() {
           </div>
         </div>
       </div>
-      {errorMessage && toast.error(errorMessage)}
     </div>
   );
 }

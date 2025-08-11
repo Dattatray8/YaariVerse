@@ -13,7 +13,7 @@ function OtherUsers({ user }) {
           <img
             src={user.profileImage || userImg}
             alt="User Image"
-            className="object-cover w-12 rounded-full"
+            className="object-cover w-16 h-fit rounded-full"
           />
         </div>
         <div className="flex justify-between w-[80%] items-center cursor-pointer">

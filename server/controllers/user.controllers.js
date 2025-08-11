@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import uploadOnCloudinary from "../config/cloudinary.js";
 
 export const getCurrentUser = async (req, res) => {
   try {
@@ -43,7 +44,7 @@ export const editProfile = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
     const sameUser = await User.findOne({ userName }).select("-password");
-    if (sameUser && sameUser._id !== req.userId) {
+    if (sameUser && !sameUser._id.equals(req.userId)) {
       return res
         .status(400)
         .json({ success: false, message: "UserName is exists" });
@@ -51,6 +52,8 @@ export const editProfile = async (req, res) => {
     let profileImage;
     if (req.file) {
       profileImage = await uploadOnCloudinary(req.file.path);
+    } else {
+      profileImage = user.profileImage;
     }
     user.name = name;
     user.userName = userName;
