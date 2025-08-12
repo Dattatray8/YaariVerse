@@ -9,8 +9,10 @@ import useSuggestedUsers from "../hooks/useSuggestedUsers";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 import Upload from "../pages/Upload";
+import useAllPosts from "../hooks/useAllPosts";
 
 function AppRoutes() {
+  useAllPosts();
   useFetchUser();
   useSuggestedUsers();
   return (

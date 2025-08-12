@@ -38,10 +38,9 @@ export const uploadPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find({}).populate(
-      "author",
-      "name userName profileImage"
-    );
+    const posts = await Post.find({})
+      .populate("author", "name userName profileImage")
+      .sort({ createdAt: -1 });
     return res
       .status(200)
       .json({ success: true, message: "Posts get successfully", posts });

@@ -13,15 +13,17 @@ function OtherUsers({ user }) {
           <img
             src={user.profileImage || userImg}
             alt="User Image"
-            className="object-cover xl:w-14 xl:h-14 h-10 w-10 rounded-full"
+            className="object-cover xl:w-14 xl:h-14 h-10 w-10 rounded-full border-2 border-white"
           />
         </div>
         <div className="flex justify-between w-[80%] items-center cursor-pointer">
           <div>
-            <div className="text-[#ededec] text-[1.3em] font-semibold">
+            <div className="text-[#ededec] text-[1.3em] font-semibold w-30 truncate">
               {user.userName}
             </div>
-            <div className="text-[#ededecaa] font-semibold">{user.name}</div>
+            <div className="text-[#ededecaa] font-semibold w-30 truncate">
+              {user.name}
+            </div>
           </div>
           <div>
             <p className="text-blue-500 hover:scale-105 transition-all hover:text-blue-400 text-md xl:text-xl font-semibold cursor-pointer">

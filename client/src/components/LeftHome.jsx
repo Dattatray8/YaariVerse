@@ -37,15 +37,15 @@ function LeftHome() {
           <img
             src={userData.profileImage || user}
             alt="User Image"
-            className="object-cover xl:w-16 xl:h-16 h-12 w-12 rounded-full"
+            className="object-cover xl:w-16 xl:h-16 h-12 w-12 rounded-full border-2 border-white"
           />
         </div>
         <div className="flex justify-between w-[75%] items-center">
           <div>
-            <div className="text-[#ededec] text-xl font-semibold">
+            <div className="text-[#ededec] text-xl font-semibold w-30 truncate">
               {userData.userName}
             </div>
-            <div className="text-[#ededecaa] font-semibold">
+            <div className="text-[#ededecaa] font-semibold w-30 truncate">
               {userData.name}
             </div>
           </div>
