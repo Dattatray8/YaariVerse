@@ -5,6 +5,10 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { ThreeDots } from "react-loader-spinner";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { setPostData } from "../redux/postSlice";
+import { setShortData } from "../redux/shortVerseSlice";
+import { setStoryData } from "../redux/storySlice";
 
 function Upload() {
   const navigation = useNavigate();
@@ -16,6 +20,10 @@ function Upload() {
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
+  const dispatch = useDispatch();
+  const { postData } = useSelector((state) => state.post);
+  const { storyData } = useSelector((state) => state.story);
+  const { shortData } = useSelector((state) => state.short);
 
   const handlemedia = (e) => {
     const file = e.target.files[0];
@@ -43,6 +51,8 @@ function Upload() {
           setLoading(false);
           console.log(e);
           setResponse(e?.data?.message);
+          let post = e?.data?.populatedPost;
+          dispatch(setPostData({ ...postData, post }));
           setFrontendMedia(null);
           setCaption(null);
         });
@@ -66,6 +76,8 @@ function Upload() {
           setLoading(false);
           console.log(e);
           setResponse(e?.data?.message);
+          let short = e?.data?.populatedShort;
+          dispatch(setShortData({ ...shortData, short }));
           setFrontendMedia(null);
           setCaption(null);
         });
@@ -89,6 +101,8 @@ function Upload() {
           setLoading(false);
           console.log(e);
           setResponse(e?.data?.message);
+          let story = e?.data?.populatedStory;
+          dispatch(setStoryData({ ...shortData, story }));
           setFrontendMedia(null);
         });
     } catch (error) {
