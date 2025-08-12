@@ -37,7 +37,7 @@ function LeftHome() {
           <img
             src={userData.profileImage || user}
             alt="User Image"
-            className="object-cover w-16 h-12 rounded-full"
+            className="object-cover w-16 h-16 rounded-full"
           />
         </div>
         <div className="flex justify-between w-[75%] items-center">

@@ -8,6 +8,7 @@ import useFetchUser from "../hooks/useFetchUser";
 import useSuggestedUsers from "../hooks/useSuggestedUsers";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
+import Upload from "../pages/Upload";
 
 function AppRoutes() {
   useFetchUser();
@@ -27,6 +28,7 @@ function AppRoutes() {
       />
       <Route path="/profile/:userName" element={<Profile />} />
       <Route path="/editprofile" element={<EditProfile />} />
+      <Route path="/upload" element={<Upload />} />
     </Routes>
   );
 }

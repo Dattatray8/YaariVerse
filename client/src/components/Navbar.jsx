@@ -27,7 +27,7 @@ function Navbar() {
       <div>
         <Search className="text-white cursor-pointer" />
       </div>
-      <div>
+      <div onClick={() => navigation("/upload")}>
         <CirclePlus className="text-white cursor-pointer" />
       </div>
       <div>
