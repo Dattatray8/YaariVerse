@@ -40,6 +40,7 @@ export const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find({})
       .populate("author", "name userName profileImage")
+      .populate("comments.author", "name userName profileImage")
       .sort({ createdAt: -1 });
     return res
       .status(200)
@@ -58,7 +59,9 @@ export const like = async (req, res) => {
     const postId = req.params.postId;
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(400).json({ success: true, message: "Post not found" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Post not found" });
     }
     const alreadyLiked = post.likes.some(
       (id) => id.toString() === req.userId.toString()
@@ -71,7 +74,7 @@ export const like = async (req, res) => {
       post.likes.push(req.userId);
     }
     await post.save();
-    post.populate("author", "name userName profileImage");
+    await post.populate("author", "name userName profileImage");
     return res
       .status(200)
       .json({ success: true, message: "Posts liked successfully", post });
@@ -90,15 +93,17 @@ export const comment = async (req, res) => {
     const postId = req.params.postId;
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(400).json({ success: true, message: "Post not found" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Post not found" });
     }
     post.comments.push({
       author: req.userId,
       message,
     });
     await post.save();
-    post.populate("author", "name userName profileImage");
-    post.populate("comments.author");
+    await post.populate("author", "name userName profileImage");
+    await post.populate("comments.author", "name userName profileImage");
     return res
       .status(200)
       .json({ success: true, message: "Posts comment successfull", post });
@@ -123,10 +128,10 @@ export const saved = async (req, res) => {
         (id) => id.toString() !== postId.toString()
       );
     } else {
-      user.saved.push(req.userId);
+      user.saved.push(postId);
     }
     await user.save();
-    user.populate("saved");
+    await user.populate("saved");
     return res
       .status(200)
       .json({ success: true, message: "Posts Saved Successfully", user });

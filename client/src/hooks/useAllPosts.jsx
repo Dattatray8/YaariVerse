@@ -1,11 +1,13 @@
 import axios from "axios";
 import { serverUrl } from "../App";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setPostData } from "../redux/postSlice";
 
 function useAllPosts() {
   const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user);
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -14,7 +16,6 @@ function useAllPosts() {
             withCredentials: true,
           })
           .then((e) => {
-            console.log(e?.data?.posts);
             dispatch(setPostData(e?.data?.posts));
           });
       } catch (error) {
@@ -22,7 +23,7 @@ function useAllPosts() {
       }
     };
     fetchPosts();
-  }, [dispatch]);
+  }, [dispatch, userData]);
 }
 
 export default useAllPosts;

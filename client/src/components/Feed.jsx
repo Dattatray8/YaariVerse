@@ -28,7 +28,7 @@ function Feed() {
       </div>
       <div className="w-full min-h-[100vh] flex flex-col items-center gap-2 bg-gray-400 mb-16">
         {postData.map((post, index) => (
-          <Post postData={post} key={index} />
+          <Post post={post} key={index} />
         ))}
       </div>
       <Navbar />

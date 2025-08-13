@@ -43,7 +43,7 @@ export const signUp = async (req, res) => {
       .json({ suscess: true, message: "User created Successfully", user });
   } catch (error) {
     return res.status(500).json({
-      sucsess: false,
+      success: false,
       message: "Failed to SignUp",
       error: error.message,
     });
@@ -58,7 +58,7 @@ export const signIn = async (req, res) => {
     if (!findUsersUserName) {
       return res
         .status(400)
-        .json({ success: false, message: "User not exists" });
+        .json({ success: false, message: "Inavlid username or password" });
     }
     const passwordMatch = await bcrypt.compare(
       password,
@@ -67,7 +67,7 @@ export const signIn = async (req, res) => {
     if (!passwordMatch) {
       return res
         .status(400)
-        .json({ success: false, message: "Incorrect Password" });
+        .json({ success: false, message: "Invalid username or password" });
     }
     const token = await generateToken(findUsersUserName._id);
     res.cookie("token", token, {
