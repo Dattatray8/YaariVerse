@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import isAuth from "../middlewares/isAuth.js";
 import {
   editProfile,
+  follow,
   getCurrentUser,
   getProfile,
   suggestedUsers,
@@ -19,5 +20,6 @@ userRouter.post(
   editProfile
 );
 userRouter.get("/profile/:userName", isAuth, getProfile);
+userRouter.get("/follow/:targetUserId", isAuth, follow);
 
 export default userRouter;

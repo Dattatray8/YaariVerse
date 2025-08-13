@@ -19,13 +19,11 @@ function Post({ post }) {
   const { postData } = useSelector((state) => state.post);
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
-  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     if (post?.author?._id && userData?._id) {
       setIsCurrentUser(post?.author?.userName === userData.userName);
     }
-    setIsSaved(userData?.saved?.includes(post?._id) || false);
   }, [post, userData]);
 
   const handleLike = async () => {
@@ -72,9 +70,7 @@ function Post({ post }) {
         }
       );
       dispatch(setUserData(result?.data?.user));
-      setIsSaved(userData?.saved?.includes(post?._id) || false);
     } catch (error) {
-      setIsSaved(false);
       console.log(error);
     }
   };
@@ -142,7 +138,7 @@ function Post({ post }) {
         </div>
         <Bookmark
           className="cursor-pointer"
-          fill={userData?.saved.includes(post?._id) ? "white" : ""}
+          fill={userData?.saved.includes(post?._id) ? "white" : "none"}
           onClick={handleSaved}
         />
       </div>
