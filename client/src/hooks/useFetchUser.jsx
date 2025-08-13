@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
 import { serverUrl } from "../App";
-import { setLoading, setUserData } from "../redux/userSlice";
+import { setFollowing, setLoading, setUserData } from "../redux/userSlice";
 
 function useFetchUser() {
   const dispatch = useDispatch();
@@ -16,6 +16,9 @@ function useFetchUser() {
           })
           .then((e) => {
             dispatch(setUserData(e?.data?.user || null));
+            dispatch(
+              setFollowing(e.data.user.following.map((id) => id))
+            );
           });
       } catch (error) {
         console.log(error);

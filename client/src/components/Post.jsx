@@ -10,16 +10,17 @@ import {
   SendHorizonal,
 } from "lucide-react";
 import { setPostData } from "../redux/postSlice";
-import { setUserData } from "../redux/userSlice";
+import { setFollowing, setUserData, toggleFollow } from "../redux/userSlice";
+import { toggleFollowUser } from "../utils/followService";
 
 function Post({ post }) {
-  const { userData } = useSelector((state) => state.user);
+  const { userData, following } = useSelector((state) => state.user);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const { postData } = useSelector((state) => state.post);
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
-
+  const isFollowing = following.includes(post?.author?._id);
   useEffect(() => {
     if (post?.author?._id && userData?._id) {
       setIsCurrentUser(post?.author?.userName === userData.userName);
@@ -80,6 +81,17 @@ function Post({ post }) {
       handleComment();
     }
   };
+
+  const handleFollow = async () => {
+    try {
+      const result = await toggleFollowUser(post?.author?._id);
+      dispatch(toggleFollow(post?.author?._id));
+      dispatch(setFollowing(result.following));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="bg-black text-white w-full flex flex-col p-3">
       <div className="flex justify-center items-center">
@@ -94,8 +106,11 @@ function Post({ post }) {
           </p>
         </div>
         {!isCurrentUser && (
-          <button className="bg-white text-black py-1 px-3 rounded-full cursor-pointer hover:bg-gray-300 transition-all duration-700">
-            Follow
+          <button
+            className="bg-white text-black py-1 px-3 rounded-full cursor-pointer hover:bg-gray-300 transition-all duration-700"
+            onClick={handleFollow}
+          >
+            {isFollowing ? "UnFollow" : "Follow"}
           </button>
         )}
       </div>

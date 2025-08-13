@@ -75,7 +75,9 @@ export const editProfile = async (req, res) => {
 export const getProfile = async (req, res) => {
   try {
     const userName = req.params.userName;
-    const user = await User.findOne({ userName }).select("-password");
+    const user = await User.findOne({ userName })
+      .select("-password")
+      .populate("posts shorts followers following");
     if (!user) {
       return res
         .status(400)
@@ -114,20 +116,16 @@ export const follow = async (req, res) => {
       );
       await currentUser.save();
       await targetUser.save();
-      return res.status(200).json({
-        following: false,
-        message: "Unfollowed",
-      });
     } else {
       currentUser.following.push(targetUserId);
       targetUser.followers.push(currentUserId);
       await currentUser.save();
       await targetUser.save();
-      return res.status(200).json({
-        following: true,
-        message: "Followed",
-      });
     }
+    return res.status(200).json({
+      following: currentUser.following.map((id) => id.toString()),
+      message: isFollowing ? "Unfollowed" : "Followed",
+    });
   } catch (error) {
     return res.status(500).json({
       message: "Error in get profile",

@@ -3,18 +3,27 @@ import { serverUrl } from "../App";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { setProfileData, setUserData } from "../redux/userSlice";
+import {
+  setFollowing,
+  setProfileData,
+  setUserData,
+  toggleFollow,
+} from "../redux/userSlice";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import user from "../assets/user.png";
 import Navbar from "../components/Navbar";
+import { toggleFollowUser } from "../utils/followService";
 
 function Profile() {
   const { userName } = useParams();
   const dispatch = useDispatch();
-  const { profileData, userData } = useSelector((state) => state.user);
+  const { profileData, userData, following } = useSelector(
+    (state) => state.user
+  );
   const navigation = useNavigate();
   const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const isFollowing = following.includes(profileData?._id);
   const handleProfile = async () => {
     try {
       await axios
@@ -51,6 +60,17 @@ function Profile() {
       setIsCurrentUser(profileData.userName === userData.userName);
     }
   }, [profileData, userData]);
+
+  const handleFollow = async () => {
+    try {
+      const result = await toggleFollowUser(profileData?._id);
+      dispatch(toggleFollow(profileData?._id));
+      dispatch(setFollowing(result.following));
+      await handleProfile();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="bg-[#181817] w-full min-h-[100vh] flex flex-col md:gap-8 gap-4">
       {isCurrentUser ? (
@@ -125,8 +145,11 @@ function Profile() {
         </div>
       ) : (
         <div className="w-full lg:px-[30%] flex justify-center items-center px-2 gap-2">
-          <button className="bg-white font-semibold py-2 w-1/2 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700">
-            Follow
+          <button
+            className="bg-white font-semibold py-2 w-1/2 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700"
+            onClick={handleFollow}
+          >
+            {isFollowing ? "UnFollow" : "Follow"}
           </button>
           <button className="bg-white font-semibold py-2 w-1/2 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700">
             Message

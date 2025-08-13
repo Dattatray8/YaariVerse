@@ -1,7 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import userImg from "../assets/user.png";
+import { setFollowing, toggleFollow } from "../redux/userSlice";
+import { toggleFollowUser } from "../utils/followService";
+import { useDispatch, useSelector } from "react-redux";
 
 function OtherUsers({ user }) {
+  const { following } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const isFollowing = following.includes(user?._id);
+  const handleFollow = async () => {
+    try {
+      const result = await toggleFollowUser(user?._id);
+      dispatch(toggleFollow(user?._id));
+      dispatch(setFollowing(result.following));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const navigation = useNavigate();
   return (
     <div className="w-full h-20 flex items-center justify-between hover:bg-[#37373582] ">
@@ -26,8 +41,11 @@ function OtherUsers({ user }) {
             </div>
           </div>
           <div>
-            <p className="text-blue-500 hover:scale-105 transition-all hover:text-blue-400 text-md xl:text-xl font-semibold cursor-pointer">
-              Follow
+            <p
+              className="text-blue-500 hover:scale-105 transition-all hover:text-blue-400 text-md xl:text-xl font-semibold cursor-pointer"
+              onClick={handleFollow}
+            >
+              {isFollowing ? "UnFollow" : "Follow"}
             </p>
           </div>
         </div>
