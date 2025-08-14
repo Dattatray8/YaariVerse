@@ -12,6 +12,7 @@ import {
 import { setPostData } from "../redux/postSlice";
 import { setFollowing, setUserData, toggleFollow } from "../redux/userSlice";
 import { toggleFollowUser } from "../utils/followService";
+import { useNavigate } from "react-router-dom";
 
 function Post({ post }) {
   const { userData, following } = useSelector((state) => state.user);
@@ -21,6 +22,8 @@ function Post({ post }) {
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
   const isFollowing = following.includes(post?.author?._id);
+  const navigation = useNavigate();
+
   useEffect(() => {
     if (post?.author?._id && userData?._id) {
       setIsCurrentUser(post?.author?.userName === userData.userName);
@@ -93,9 +96,12 @@ function Post({ post }) {
   };
 
   return (
-    <div className="bg-black text-white w-full flex flex-col p-3">
+    <div className="bg-[#181817] text-white w-full flex flex-col p-3">
       <div className="flex justify-center items-center">
-        <div className="w-full h-20 flex gap-5 items-center">
+        <div
+          className="w-full h-20 flex gap-5 items-center cursor-pointer"
+          onClick={() => navigation(`/profile/${post?.author?.userName}`)}
+        >
           <img
             src={post?.author?.profileImage || user}
             alt="User profile image"

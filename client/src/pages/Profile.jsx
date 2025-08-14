@@ -14,6 +14,7 @@ import { useState } from "react";
 import user from "../assets/user.png";
 import Navbar from "../components/Navbar";
 import { toggleFollowUser } from "../utils/followService";
+import Post from "../components/Post";
 
 function Profile() {
   const { userName } = useParams();
@@ -24,6 +25,9 @@ function Profile() {
   const navigation = useNavigate();
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const isFollowing = following.includes(profileData?._id);
+  const [nav, setNav] = useState("posts");
+  const { postData } = useSelector((state) => state.post);
+
   const handleProfile = async () => {
     try {
       await axios
@@ -52,9 +56,11 @@ function Profile() {
       console.log(error);
     }
   };
+
   useEffect(() => {
     handleProfile();
   }, [userName, dispatch]);
+
   useEffect(() => {
     if (profileData?._id && userData?._id) {
       setIsCurrentUser(profileData.userName === userData.userName);
@@ -71,6 +77,7 @@ function Profile() {
       console.log(error);
     }
   };
+
   return (
     <div className="bg-[#181817] w-full min-h-[100vh] flex flex-col md:gap-8 gap-4">
       {isCurrentUser ? (
@@ -107,18 +114,18 @@ function Profile() {
           />
         </div>
         <div className="flex flex-col gap-1 justify-center">
-          <p className="text-white font-semibold text-xl">
+          <p className="text-white font-semibold text-lg">
             {profileData?.name}
           </p>
           <p className="text-gray-400 text-sm font-semibold">
             @{profileData?.userName}
           </p>
-          <p className="text-white font-semibold">
+          <p className="text-white font-semibold text-sm">
             {profileData?.profession || "Developer"}
           </p>
         </div>
       </div>
-      <div className="w-full lg:px-[25%] flex justify-center items-center sm:gap-12 gap-12">
+      <div className="w-full lg:px-[25%] flex justify-center items-center sm:gap-12 gap-12 mt-2">
         <p className="text-white font-semibold hidden sm:block">
           {profileData?.posts.length} Posts
         </p>
@@ -154,6 +161,59 @@ function Profile() {
           <button className="bg-white font-semibold py-2 w-1/2 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700">
             Message
           </button>
+        </div>
+      )}
+
+      {isCurrentUser ? (
+        <div className="w-full lg:px-[30%] flex justify-center items-center px-2 gap-2">
+          <p
+            className={`w-1/2 cursor-pointer text-white text-center pb-3 ${
+              nav === "posts" && "border-b-2 border-white"
+            } transition-all `}
+            onClick={() => setNav("posts")}
+          >
+            Posts
+          </p>
+          <p
+            className={`w-1/2 cursor-pointer text-white text-center pb-3 ${
+              nav === "saved" && "border-b-2 border-white"
+            } transition-all `}
+            onClick={() => setNav("saved")}
+          >
+            Saved
+          </p>
+        </div>
+      ) : (
+        <div className="w-full lg:px-[30%] flex justify-center items-center px-2 gap-2 mt-1">
+          <p className="w-full cursor-pointer text-white text-center pb-3 border-b-2 border-white transition-all ">
+            Posts
+          </p>
+        </div>
+      )}
+
+      {nav === "posts" && (
+        <div className="w-full lg:px-[30%] flex justify-center items-center flex-col gap-3">
+          {postData.map(
+            (post, index) =>
+              post?.author?._id == profileData?._id && (
+                <div className="border-b-2 border-[#ededec]" key={index}>
+                  <Post post={post} />
+                </div>
+              )
+          )}
+        </div>
+      )}
+      {nav === "saved" && (
+        <div className="w-full lg:px-[30%] flex justify-center items-center flex-col gap-3 mb-10">
+          {userData?.saved?.map((postId) => {
+            const post = postData.find  ((p) => p._id === postId);
+            if (!post) return null;
+            return (
+              <div className="border-b-2 border-[#ededec]" key={post._id}>
+                <Post post={post} />
+              </div>
+            );
+          })}
         </div>
       )}
       <div className="flex justify-center">
