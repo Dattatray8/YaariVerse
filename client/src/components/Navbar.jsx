@@ -30,7 +30,7 @@ function Navbar() {
       <div onClick={() => navigation("/upload")}>
         <CirclePlus className="text-white cursor-pointer" />
       </div>
-      <div>
+      <div onClick={() => navigation("/shorts")}>
         <Video className="text-white cursor-pointer" />
       </div>
       <div onClick={() => navigation(`/profile/${userData?.userName}`)}>

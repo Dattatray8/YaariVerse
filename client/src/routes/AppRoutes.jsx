@@ -10,11 +10,15 @@ import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 import Upload from "../pages/Upload";
 import useAllPosts from "../hooks/useAllPosts";
+import Shorts from "../pages/Shorts";
+import useAllShorts from "../hooks/useAllShorts";
 
 function AppRoutes() {
   useAllPosts();
   useFetchUser();
   useSuggestedUsers();
+  useAllShorts();
+  
   return (
     <Routes>
       <Route path="/signup" element={<SignUp />} />
@@ -31,6 +35,7 @@ function AppRoutes() {
       <Route path="/profile/:userName" element={<Profile />} />
       <Route path="/editprofile" element={<EditProfile />} />
       <Route path="/upload" element={<Upload />} />
+      <Route path="/shorts" element={<Shorts />} />
     </Routes>
   );
 }

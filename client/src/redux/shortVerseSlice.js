@@ -7,7 +7,7 @@ const shortVerseSlice = createSlice({
   },
   reducers: {
     setShortData: (state, action) => {
-      state.postData = action.payload;
+      state.shortData = action.payload;
     },
   },
 });

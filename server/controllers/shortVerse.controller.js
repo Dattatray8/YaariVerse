@@ -55,7 +55,7 @@ export const like = async (req, res) => {
       short.likes.push(req.userId);
     }
     await short.save();
-    short.populate("author", "name userName profileImage");
+    await short.populate("author", "name userName profileImage");
     return res
       .status(200)
       .json({ success: true, message: "Short liked successfully", short });
@@ -83,8 +83,8 @@ export const comment = async (req, res) => {
       message,
     });
     await short.save();
-    short.populate("author", "name userName profileImage");
-    short.populate("comments.author");
+    await short.populate("author", "name userName profileImage");
+    await short.populate("comments.author");
     return res
       .status(200)
       .json({ success: true, message: "Short comment successfull", short });
