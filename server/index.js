@@ -8,6 +8,7 @@ import userRouter from "./routes/user.routes.js";
 import postRouter from "./routes/post.routes.js";
 import shortsRouter from "./routes/shortVerse.routes.js";
 import storyRouter from "./routes/story.routes.js";
+import messageRouter from "./routes/message.routes.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use("/api/user", userRouter);
 app.use("/api/post", postRouter);
 app.use("/api/short", shortsRouter);
 app.use("/api/story", storyRouter);
+app.use("/api/message", messageRouter);
 
 app.listen(process.env.PORT || 5000, () => {
   dbConnection();
