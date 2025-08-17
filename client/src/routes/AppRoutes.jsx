@@ -12,13 +12,16 @@ import Upload from "../pages/Upload";
 import useAllPosts from "../hooks/useAllPosts";
 import Shorts from "../pages/Shorts";
 import useAllShorts from "../hooks/useAllShorts";
+import Story from "../pages/Story";
+import useAllStories from "../hooks/useAllStories";
 
 function AppRoutes() {
   useAllPosts();
   useFetchUser();
   useSuggestedUsers();
   useAllShorts();
-  
+  useAllStories();
+
   return (
     <Routes>
       <Route path="/signup" element={<SignUp />} />
@@ -36,6 +39,7 @@ function AppRoutes() {
       <Route path="/editprofile" element={<EditProfile />} />
       <Route path="/upload" element={<Upload />} />
       <Route path="/shorts" element={<Shorts />} />
+      <Route path="/story/:userName" element={<Story />} />
     </Routes>
   );
 }

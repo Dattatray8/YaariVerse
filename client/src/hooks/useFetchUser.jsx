@@ -1,11 +1,13 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
 import { serverUrl } from "../App";
 import { setFollowing, setLoading, setUserData } from "../redux/userSlice";
+import { setCurrentUserStory } from "../redux/storySlice";
 
 function useFetchUser() {
   const dispatch = useDispatch();
+  const { storyData } = useSelector((state) => state.story);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -16,9 +18,8 @@ function useFetchUser() {
           })
           .then((e) => {
             dispatch(setUserData(e?.data?.user || null));
-            dispatch(
-              setFollowing(e.data.user.following.map((id) => id))
-            );
+            dispatch(setFollowing(e.data.user.following.map((id) => id)));
+            dispatch(setCurrentUserStory(e?.data?.user?.story));
           });
       } catch (error) {
         console.log(error);
@@ -26,7 +27,7 @@ function useFetchUser() {
       }
     };
     fetchUser();
-  }, [dispatch]);
+  }, [dispatch, storyData]);
 }
 
 export default useFetchUser;

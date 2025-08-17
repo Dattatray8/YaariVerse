@@ -8,7 +8,8 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setPostData } from "../redux/postSlice";
 import { setShortData } from "../redux/shortVerseSlice";
-import { setStoryData } from "../redux/storySlice";
+import { setUserData } from "../redux/userSlice";
+import { setCurrentUserStory } from "../redux/storySlice";
 
 function Upload() {
   const navigation = useNavigate();
@@ -22,7 +23,6 @@ function Upload() {
   const [response, setResponse] = useState("");
   const dispatch = useDispatch();
   const { postData } = useSelector((state) => state.post);
-  const { storyData } = useSelector((state) => state.story);
   const { shortData } = useSelector((state) => state.short);
 
   const handlemedia = (e) => {
@@ -99,10 +99,8 @@ function Upload() {
         })
         .then((e) => {
           setLoading(false);
-          console.log(e);
           setResponse(e?.data?.message);
-          let story = e?.data?.populatedStory;
-          dispatch(setStoryData({ ...shortData, story }));
+          dispatch(setCurrentUserStory(e?.data?.populatedStory));
           setFrontendMedia(null);
         });
     } catch (error) {

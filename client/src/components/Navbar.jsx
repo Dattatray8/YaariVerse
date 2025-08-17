@@ -38,7 +38,7 @@ function Navbar() {
           <img
             src={userData?.profileImage || user}
             alt="User Image"
-            className="object-cover w-8 h-8 rounded-full border-2 border-white"
+            className="object-cover w-8 h-8 rounded-full"
           />
         </div>
       </div>

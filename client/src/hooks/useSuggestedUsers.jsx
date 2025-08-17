@@ -16,7 +16,6 @@ function useSuggestedUsers() {
             withCredentials: true,
           })
           .then((e) => {
-            console.log(e?.data);
             dispatch(setSuggestedUsers(e?.data || null));
           });
       } catch (error) {

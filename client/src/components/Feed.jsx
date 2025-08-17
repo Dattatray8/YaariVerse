@@ -7,6 +7,9 @@ import Post from "./Post";
 
 function Feed() {
   const { postData } = useSelector((state) => state.post);
+  const { userData } = useSelector((state) => state.user);
+  const { storyList, currentUserStory } = useSelector((state) => state.story);
+
   return (
     <div className="lg:w-[50%] w-full bg-[#181817] min-h-[100vh] lg:h-[100vh] relative lg:overflow-y-auto">
       <div className="flex justify-between items-center px-4 py-2 lg:hidden">
@@ -17,14 +20,19 @@ function Feed() {
         <Heart className="text-white" />
       </div>
       <div className="flex w-full justify-start overflow-x-auto gap-4 items-center lg:p-4 px-4 py-2">
-        <StorySection userName={"hdiwuhduwidhiw8d"} />
-        <StorySection userName={"hdiwuhduwidhiw8d"} />
-        <StorySection userName={"hdiwuhduwidhiw8d"} />
-        <StorySection userName={"hdiwuhduwidhiw8d"} />
-        <StorySection userName={"hdiwuhduwidhiw8d"} />
-        <StorySection userName={"hdiwuhduwidhiw8d"} />
-        <StorySection userName={"hdiwuhduwidhiw8d"} />
-        <StorySection userName={"hdiwuhduwidhiw8d"} />
+        <StorySection
+          userName={"You"}
+          profileImage={userData?.profileImage}
+          story={currentUserStory}
+        />
+        {storyList?.map((story, index) => (
+          <StorySection
+            userName={story?.author?.userName || "unknown"}
+            profileImage={story?.author?.profileImage}
+            story={story}
+            key={index}
+          />
+        ))}
       </div>
       <div className="w-full min-h-[100vh] flex flex-col items-center gap-2 bg-gray-400 mb-16">
         {postData.map((post, index) => (

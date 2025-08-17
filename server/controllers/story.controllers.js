@@ -33,7 +33,7 @@ export const uploadStory = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      success: true,
+      success: false,
       message: "Error in Uploading Story",
       error: error.message,
     });
@@ -64,7 +64,7 @@ export const viewStory = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      success: true,
+      success: false,
       message: "Error to View Story",
       error: error.message,
     });
@@ -90,8 +90,32 @@ export const getStoryByUserName = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      success: true,
+      success: false,
       message: "Error to Get Story",
+      error: error.message,
+    });
+  }
+};
+
+export const getAllStories = async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.userId);
+    const followingIds = currentUser.following;
+    const stories = await Story.find({
+      author: { $in: followingIds },
+    })
+      .populate("viewers author")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "All Story get successfully",
+      stories,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error to Get All Stories",
       error: error.message,
     });
   }

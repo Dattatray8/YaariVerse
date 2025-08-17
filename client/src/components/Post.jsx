@@ -105,7 +105,7 @@ function Post({ post }) {
           <img
             src={post?.author?.profileImage || user}
             alt="User profile image"
-            className="w-16 h-16 rounded-full border-2 border-white"
+            className="w-14 h-14 rounded-full"
           />
           <p className="w-30 truncate font-semibold text-lg">
             {post?.author?.userName}
