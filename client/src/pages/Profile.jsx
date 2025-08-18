@@ -15,6 +15,7 @@ import user from "../assets/user.png";
 import Navbar from "../components/Navbar";
 import { toggleFollowUser } from "../utils/followService";
 import Post from "../components/Post";
+import { setSelectedUser } from "../redux/chatSlice";
 
 function Profile() {
   const { userName } = useParams();
@@ -121,10 +122,11 @@ function Profile() {
             @{profileData?.userName}
           </p>
           <p className="text-white font-semibold text-sm">
-            {profileData?.profession || "Developer"}
+            {profileData?.profession}
           </p>
         </div>
       </div>
+
       <div className="w-full lg:px-[25%] flex justify-center items-center sm:gap-12 gap-12 mt-2">
         <p className="text-white font-semibold hidden sm:block">
           {profileData?.posts.length} Posts
@@ -136,11 +138,13 @@ function Profile() {
           {profileData?.following.length} Following
         </p>
       </div>
+
       {profileData?.bio && (
         <div className="w-full lg:px-[30%] sm:px-[10%] md:px-[20%] flex justify-start items-center text-white px-10">
           {profileData?.bio || "users bio"}
         </div>
       )}
+
       {isCurrentUser ? (
         <div className="w-full lg:px-[30%] flex justify-center items-center">
           <button
@@ -158,7 +162,13 @@ function Profile() {
           >
             {isFollowing ? "UnFollow" : "Follow"}
           </button>
-          <button className="bg-white font-semibold py-2 w-1/2 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700">
+          <button
+            className="bg-white font-semibold py-2 w-1/2 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700"
+            onClick={() => {
+              dispatch(setSelectedUser(profileData));
+              navigation("/chat/conversation");
+            }}
+          >
             Message
           </button>
         </div>
@@ -203,10 +213,11 @@ function Profile() {
           )}
         </div>
       )}
+
       {nav === "saved" && (
         <div className="w-full lg:px-[30%] flex justify-center items-center flex-col gap-3 mb-10">
           {userData?.saved?.map((postId) => {
-            const post = postData.find  ((p) => p._id === postId);
+            const post = postData.find((p) => p._id === postId);
             if (!post) return null;
             return (
               <div className="border-b-2 border-[#ededec]" key={post._id}>

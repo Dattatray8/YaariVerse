@@ -14,6 +14,8 @@ import Shorts from "../pages/Shorts";
 import useAllShorts from "../hooks/useAllShorts";
 import Story from "../pages/Story";
 import useAllStories from "../hooks/useAllStories";
+import Messages from "../pages/Messages";
+import Chatting from "../pages/Chatting";
 
 function AppRoutes() {
   useAllPosts();
@@ -40,6 +42,8 @@ function AppRoutes() {
       <Route path="/upload" element={<Upload />} />
       <Route path="/shorts" element={<Shorts />} />
       <Route path="/story/:userName" element={<Story />} />
+      <Route path="/messages" element={<Messages />} />
+      <Route path="/chat/conversation" element={<Chatting />} />
     </Routes>
   );
 }

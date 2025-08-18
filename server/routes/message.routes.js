@@ -3,7 +3,7 @@ import {
   getAllMessages,
   getPrevUserChat,
   sendMessage,
-} from "../controllers/message.controller";
+} from "../controllers/message.controller.js";
 import isAuth from "../middlewares/isAuth.js";
 import { upload } from "../middlewares/multur.js";
 

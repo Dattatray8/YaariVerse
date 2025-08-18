@@ -18,7 +18,7 @@ function Story() {
         serverUrl + "/api/story/getByUserName/" + userName,
         { withCredentials: true }
       );
-      dispatch(setStoryData(res?.data?.story[0]));
+      dispatch(setStoryData(res?.data?.story || null));
     } catch (error) {
       console.log(error);
     }

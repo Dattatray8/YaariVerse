@@ -80,12 +80,27 @@ export const getStoryByUserName = async (req, res) => {
         .status(400)
         .json({ success: false, message: "User not found" });
     }
-    const story = await Story.find({ author: user._id }).populate(
+
+    const story = await Story.findOne({ author: user._id }).populate(
       "viewers author"
     );
+
+    if (!story) {
+      if (user.story) {
+        user.story = null;
+        await user.save();
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "No active story",
+        story: null,
+      });
+    }
+
     return res.status(200).json({
       success: true,
-      message: "Story get successfully",
+      message: "Story fetched successfully",
       story,
     });
   } catch (error) {

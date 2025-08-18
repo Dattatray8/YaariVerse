@@ -19,7 +19,7 @@ function useFetchUser() {
           .then((e) => {
             dispatch(setUserData(e?.data?.user || null));
             dispatch(setFollowing(e.data.user.following.map((id) => id)));
-            dispatch(setCurrentUserStory(e?.data?.user?.story));
+            dispatch(setCurrentUserStory(e?.data?.user?.story || null));
           });
       } catch (error) {
         console.log(error);

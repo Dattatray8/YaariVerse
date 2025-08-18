@@ -1,14 +1,16 @@
-import { Heart } from "lucide-react";
+import { Heart, MessagesSquare } from "lucide-react";
 import logo from "/public/icon.png";
 import StorySection from "./StorySection";
 import Navbar from "./Navbar";
 import { useSelector } from "react-redux";
 import Post from "./Post";
+import { useNavigate } from "react-router-dom";
 
 function Feed() {
   const { postData } = useSelector((state) => state.post);
   const { userData } = useSelector((state) => state.user);
   const { storyList, currentUserStory } = useSelector((state) => state.story);
+  const navigation = useNavigate();
 
   return (
     <div className="lg:w-[50%] w-full bg-[#181817] min-h-[100vh] lg:h-[100vh] relative lg:overflow-y-auto">
@@ -17,7 +19,13 @@ function Feed() {
           <img src={logo} alt="Yaari verse logo" className="w-14" />
           <p className="text-white text-xl font-semibold">Yaariverse</p>
         </div>
-        <Heart className="text-white" />
+        <div className="flex gap-4 justify-center items-center">
+          <Heart className="text-white cursor-pointer" />
+          <MessagesSquare
+            className="text-white cursor-pointer"
+            onClick={() => navigation("/messages")}
+          />
+        </div>
       </div>
       <div className="flex w-full justify-start overflow-x-auto gap-4 items-center lg:p-4 px-4 py-2">
         <StorySection

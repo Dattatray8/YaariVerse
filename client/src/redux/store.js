@@ -3,6 +3,7 @@ import userSlice from "./userSlice";
 import postSlice from "./postSlice";
 import storySlice from "./storySlice";
 import shortVerseSlice from "./shortVerseSlice";
+import chatSlice from "./chatSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
     post: postSlice,
     story: storySlice,
     short: shortVerseSlice,
+    chat: chatSlice,
   },
 });
