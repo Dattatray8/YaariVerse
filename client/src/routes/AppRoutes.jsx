@@ -43,7 +43,7 @@ function AppRoutes() {
       <Route path="/shorts" element={<Shorts />} />
       <Route path="/story/:userName" element={<Story />} />
       <Route path="/messages" element={<Messages />} />
-      <Route path="/chat/conversation" element={<Chatting />} />
+      <Route path="/chat/:userName" element={<Chatting />} />
     </Routes>
   );
 }

@@ -166,7 +166,7 @@ function Profile() {
             className="bg-white font-semibold py-2 w-1/2 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700"
             onClick={() => {
               dispatch(setSelectedUser(profileData));
-              navigation("/chat/conversation");
+              navigation(`/chat/${profileData?.userName}`);
             }}
           >
             Message
