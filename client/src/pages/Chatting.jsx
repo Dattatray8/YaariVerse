@@ -45,14 +45,21 @@ function Chatting() {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     try {
+      const formdata = new FormData();
+      formdata.append("message", input);
+      if (backendImage) {
+        formdata.append("image", backendImage);
+      }
       const result = await axios.post(
         `${serverUrl}/api/message/send/${selectedUser?._id}`,
-        { message: input },
+        formdata,
         { withCredentials: true }
       );
       console.log(result);
       dispatch(setMessages([...messages, result?.data?.newMessage]));
       setInput("");
+      setFrontendImage(null);
+      setBackendImage(null);
     } catch (error) {
       console.log(error);
     }
@@ -99,7 +106,7 @@ function Chatting() {
         </div>
       </div>
 
-      <div className="w-full h-[90%] px-10 flex flex-col gap-2 overflow-auto pt-24 pb-28">
+      <div className="w-full h-[90%] px-5 sm:px-10 flex flex-col gap-2 overflow-auto pt-24 pb-6">
         {messages &&
           messages.map((message, index) =>
             message?.sender == userData?._id ? (
@@ -150,6 +157,7 @@ function Chatting() {
               <button
                 type="submit"
                 className="flex items-center justify-center bg-[#4a4a4a] p-2 rounded-full hover:bg-[#5a5a5a] cursor-pointer"
+                onClick={handleSendMessage}
               >
                 <SendHorizonal className="text-white w-5 h-5" />
               </button>
