@@ -3,6 +3,7 @@ import isAuth from "../middlewares/isAuth.js";
 import {
   editProfile,
   follow,
+  followingList,
   getCurrentUser,
   getProfile,
   suggestedUsers,
@@ -21,5 +22,6 @@ userRouter.post(
 );
 userRouter.get("/profile/:userName", isAuth, getProfile);
 userRouter.get("/follow/:targetUserId", isAuth, follow);
+userRouter.get("/followinglist", isAuth, followingList);
 
 export default userRouter;

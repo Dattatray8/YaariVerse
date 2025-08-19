@@ -5,7 +5,7 @@ export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.userId;
     const user = await User.findById(userId).populate(
-      "posts shorts posts.author posts.comments"
+      "posts shorts posts.author posts.comments following"
     );
     if (!user) {
       return res
@@ -131,6 +131,18 @@ export const follow = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "Error in get profile",
+      error: error.message,
+    });
+  }
+};
+
+export const followingList = async (req, res) => {
+  try {
+    const result = await User.findById(req.userId);
+    return res.status(200).json(result?.following);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error in getting following list",
       error: error.message,
     });
   }

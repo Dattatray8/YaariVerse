@@ -16,6 +16,7 @@ import Story from "../pages/Story";
 import useAllStories from "../hooks/useAllStories";
 import Messages from "../pages/Messages";
 import Chatting from "../pages/Chatting";
+import useFollowingList from "../hooks/useFollowingList";
 
 function AppRoutes() {
   useAllPosts();
@@ -23,6 +24,7 @@ function AppRoutes() {
   useSuggestedUsers();
   useAllShorts();
   useAllStories();
+  useFollowingList();
 
   return (
     <Routes>
