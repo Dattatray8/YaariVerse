@@ -13,11 +13,13 @@ import { setPostData } from "../redux/postSlice";
 import { setFollowing, setUserData, toggleFollow } from "../redux/userSlice";
 import { toggleFollowUser } from "../utils/followService";
 import { useNavigate } from "react-router-dom";
+import { useSocket } from "../hooks/useSocket";
 
 function Post({ post }) {
   const { userData, following } = useSelector((state) => state.user);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [showComment, setShowComment] = useState(false);
+  const { socket } = useSocket();
   const { postData } = useSelector((state) => state.post);
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
@@ -94,6 +96,28 @@ function Post({ post }) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    socket?.on("likedPost", (updatedData) => {
+      const updatedPosts = postData.map((p) =>
+        p._id == updatedData?.postId ? { ...p, likes: updatedData?.likes } : p
+      );
+      dispatch(setPostData(updatedPosts));
+    });
+
+    socket?.on("commentedPost", (updatedData) => {
+      const updatedPosts = postData.map((p) =>
+        p._id == updatedData?.postId
+          ? { ...p, comments: updatedData?.comments }
+          : p
+      );
+      dispatch(setPostData(updatedPosts));
+    });
+    return () => {
+      socket?.off("likedPost");
+      socket?.off("commentedPost");
+    };
+  }, [socket, postData, dispatch]);
 
   return (
     <div className="bg-gradient-to-br from-[#0a0a0a] to-[#181817] text-white w-full flex flex-col p-3">

@@ -1,6 +1,7 @@
 import uploadOnCloudinary from "../config/cloudinary.js";
 import User from "../models/user.model.js";
 import ShortVerse from "../models/shortVerse.model.js";
+import { io } from "../socket.js";
 
 export const uploadShort = async (req, res) => {
   try {
@@ -56,6 +57,12 @@ export const like = async (req, res) => {
     }
     await short.save();
     await short.populate("author", "name userName profileImage");
+
+    io.emit("likedShort", {
+      shortId: short?._id,
+      likes: short?.likes,
+    });
+
     return res
       .status(200)
       .json({ success: true, message: "Short liked successfully", short });
@@ -85,6 +92,12 @@ export const comment = async (req, res) => {
     await short.save();
     await short.populate("author", "name userName profileImage");
     await short.populate("comments.author");
+
+    io.emit("commentedShort", {
+      shortId: short?._id,
+      comments: short?.comments,
+    });
+
     return res
       .status(200)
       .json({ success: true, message: "Short comment successfull", short });

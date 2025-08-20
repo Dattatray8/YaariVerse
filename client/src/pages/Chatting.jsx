@@ -8,10 +8,12 @@ import { serverUrl } from "../App";
 import { setMessages, setSelectedUser } from "../redux/chatSlice";
 import SenderMessage from "../components/SenderMessage";
 import ReceiverMessage from "../components/ReceiverMessage";
+import { useSocket } from "../hooks/useSocket";
 
 function Chatting() {
   const { selectedUser, messages } = useSelector((state) => state.chat);
   const { userData } = useSelector((state) => state.user);
+  const { socket } = useSocket();
   const [input, setInput] = useState("");
   const navigation = useNavigate();
   const imageInput = useRef();
@@ -86,6 +88,13 @@ function Chatting() {
     handleProfile();
   }, [userName]);
 
+  useEffect(() => {
+    socket?.on("newMessage", (msg) => {
+      dispatch(setMessages([...messages, msg]));
+    });
+    return () => socket?.off("newMessage");
+  }, [messages, setMessages]);
+
   return (
     <div className="w-full h-[100vh] bg-[#181817] relative">
       <div className="flex gap-4 p-6 z-[100] top-0 w-full items-center fixed bg-[#181817]">
@@ -157,7 +166,6 @@ function Chatting() {
               <button
                 type="submit"
                 className="flex items-center justify-center bg-[#4a4a4a] p-2 rounded-full hover:bg-[#5a5a5a] cursor-pointer"
-                onClick={handleSendMessage}
               >
                 <SendHorizonal className="text-white w-5 h-5" />
               </button>

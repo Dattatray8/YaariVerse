@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { setShortData } from "../redux/shortVerseSlice";
 import axios from "axios";
 import { serverUrl } from "../App";
+import { useSocket } from "../hooks/useSocket";
 
 function VideoPlayer({ media, data }) {
   let videoTag = useRef();
@@ -35,6 +36,7 @@ function VideoPlayer({ media, data }) {
   const [comment, setComment] = useState("");
   const [showComment, setShowComment] = useState(false);
   const commentRef = useRef();
+  const { socket } = useSocket();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -175,6 +177,28 @@ function VideoPlayer({ media, data }) {
       handleComment();
     }
   };
+
+  useEffect(() => {
+    socket?.on("likedShort", (updatedData) => {
+      const updatedShort = shortData?.map((p) =>
+        p._id == updatedData?.shortId ? { ...p, likes: updatedData?.likes } : p
+      );
+      dispatch(setShortData(updatedShort));
+    });
+
+    socket?.on("commentedShort", (updatedData) => {
+      const updatedShort = shortData?.map((p) =>
+        p._id == updatedData?.shordId
+          ? { ...p, comments: updatedData?.comments }
+          : p
+      );
+      dispatch(setShortData(updatedShort));
+    });
+    return () => {
+      socket?.off("likedShort");
+      socket?.off("commentedShort");
+    };
+  }, [socket, shortData, dispatch]);
 
   return (
     <div className="h-[100%] relative cursor-pointer w-full max-w-full overflow-hidden flex justify-center items-center">

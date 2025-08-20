@@ -101,45 +101,49 @@ function Messages() {
         </h2>
         <div className="space-y-2">
           {allFollowing.length > 0 ? (
-            allFollowing.map((user, index) => {
-              const isOnline = onlineUsers?.includes(user?._id);
-              return (
-                <div
-                  key={index}
-                  onClick={() => handleChatClick(user?.userName)}
-                  className="group flex items-center gap-4 p-4 hover:bg-gray-800/50 rounded-2xl cursor-pointer transition-all duration-300 border border-transparent hover:border-gray-700"
-                >
-                  <div className="relative">
-                    <div className="w-14 h-14 bg-gradient-to-br from-gray-600 to-gray-700 rounded-2xl overflow-hidden">
-                      <img
-                        src={user?.profileImage || usercopy}
-                        alt={user?.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        onError={(e) => {
-                          e.target.src = `https://ui-avatars.com/api/?name=${user?.name}&background=4b5563&color=ffffff&size=56&rounded=true`;
-                        }}
-                      />
+            [...allFollowing]
+              .sort((a, b) => {
+                const aOnline = onlineUsers?.includes(a?._id);
+                const bOnline = onlineUsers?.includes(b?._id);
+                return bOnline - aOnline; // online first
+              })
+              .map((user, index) => {
+                const isOnline = onlineUsers?.includes(user?._id);
+                return (
+                  <div
+                    key={index}
+                    onClick={() => handleChatClick(user?.userName)}
+                    className="group flex items-center gap-4 p-4 hover:bg-gray-800/50 rounded-2xl cursor-pointer transition-all duration-300 border border-transparent hover:border-gray-700"
+                  >
+                    <div className="relative">
+                      <div className="w-14 h-14 bg-gradient-to-br from-gray-600 to-gray-700 rounded-2xl overflow-hidden">
+                        <img
+                          src={user?.profileImage || usercopy}
+                          alt={user?.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.src = `https://ui-avatars.com/api/?name=${user?.name}&background=4b5563&color=ffffff&size=56&rounded=true`;
+                          }}
+                        />
+                      </div>
+                      {isOnline && (
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-black rounded-full"></div>
+                      )}
                     </div>
-                    {isOnline && (
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-black rounded-full"></div>
-                    )}
-                  </div>
 
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-white font-semibold group-hover:text-blue-400 transition-colors">
-                        {user?.name}
-                      </h3>
-                    </div>
-                    <div className="flex items-center justify-between mt-1">
-                      <p className="text-gray-400 text-sm truncate">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-white font-semibold group-hover:text-blue-400 transition-colors">
+                          {user?.name}
+                        </h3>
+                      </div>
+                      <p className="text-gray-400 text-sm truncate mt-1">
                         {isOnline ? "Active now" : "Click to start chatting..."}
                       </p>
                     </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              })
           ) : (
             <div className="text-center py-12">
               <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
