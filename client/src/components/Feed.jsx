@@ -13,7 +13,7 @@ function Feed() {
   const navigation = useNavigate();
 
   return (
-    <div className="lg:w-[50%] w-full bg-[#181817] min-h-[100vh] lg:h-[100vh] relative lg:overflow-y-auto">
+    <div className="lg:w-[50%] w-full bg-gradient-to-br from-[#0a0a0a] to-[#181817] min-h-[100vh] lg:h-[100vh] relative lg:overflow-y-auto">
       <div className="flex justify-between items-center px-4 py-2 lg:hidden">
         <div className="flex items-center">
           <img src={logo} alt="Yaari verse logo" className="w-14" />

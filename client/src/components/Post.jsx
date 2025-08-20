@@ -96,7 +96,7 @@ function Post({ post }) {
   };
 
   return (
-    <div className="bg-[#181817] text-white w-full flex flex-col p-3">
+    <div className="bg-gradient-to-br from-[#0a0a0a] to-[#181817] text-white w-full flex flex-col p-3">
       <div className="flex justify-center items-center">
         <div
           className="w-full h-20 flex gap-5 items-center cursor-pointer"

@@ -7,7 +7,7 @@ function Shorts() {
   const navigation = useNavigate();
   const { shortData } = useSelector((state) => state.short);
   return (
-    <div className="w-screen h-screen bg-black overflow-hidden flex justify-center items-center">
+    <div className="w-screen h-screen bg-gradient-to-br from-[#0a0a0a] to-[#181817] overflow-hidden flex justify-center items-center">
       <div className="w-full py-4 px-6 md:px-8 flex items-center  gap-4 h-20 fixed top-0 z-10">
         <ArrowLeft
           className="text-white h-full cursor-pointer"

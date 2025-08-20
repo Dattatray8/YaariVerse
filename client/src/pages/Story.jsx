@@ -30,7 +30,7 @@ function Story() {
     }
   }, [userName]);
   return (
-    <div className="w-full h-[100vh] bg-[#181817] flex justify-center items-center">
+    <div className="w-full h-[100vh] bg-gradient-to-br from-[#0a0a0a] to-[#181817] flex justify-center items-center">
       {storyData ? <StoryCard storyData={storyData} /> : <LoadingSpinner />}
     </div>
   );

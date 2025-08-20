@@ -24,7 +24,7 @@ function LeftHome() {
   };
   const { userData, suggestedUsers } = useSelector((state) => state.user);
   return (
-    <div className="w-[25%] hidden lg:flex min-h-[100vh] bg-[#181817] border-r-2 border-[#ededec22] flex-col gap-2">
+    <div className="w-[25%] hidden lg:flex min-h-[100vh] bg-gradient-to-br from-[#0a0a0a] to-[#181817] border-r-2 border-[#ededec22] flex-col gap-2">
       <div className="flex justify-between items-center px-4 py-2">
         <div className="flex items-center">
           <img src={logo} alt="Yaari verse logo" className="w-14" />

@@ -49,7 +49,7 @@ function SignIn() {
     }
   },[errorMessage]);
   return (
-    <div className="flex justify-center items-center h-screen bg-[#181817]">
+    <div className="flex justify-center items-center h-screen bg-gradient-to-br from-[#0a0a0a] to-[#181817]">
       <div className="w-[20em] h-[24em] bg-[#ededec] rounded-2xl drop-shadow-lg drop-shadow-white flex flex-col justify-center">
         <div className="flex justify-center items-center">
           <p className="text-2xl font-semibold text-[#22292e]">SignIn to</p>

@@ -82,7 +82,7 @@ function EditProfile() {
     }
   }, [errorMessage]);
   return (
-    <div className="bg-[#181817] w-full min-h-[100vh] flex flex-col md:gap-8 gap-4">
+    <div className="bg-gradient-to-br from-[#0a0a0a] to-[#181817] w-full min-h-[100vh] flex flex-col md:gap-8 gap-4">
       <div className="w-full py-4 px-6 md:px-8 flex items-center gap-8 sm:h-20 h-16">
         <ArrowLeft
           className="text-white h-full cursor-pointer"
