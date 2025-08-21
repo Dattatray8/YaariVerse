@@ -4,8 +4,10 @@ import {
   editProfile,
   follow,
   followingList,
+  getAllNotfications,
   getCurrentUser,
   getProfile,
+  markAsRead,
   search,
   suggestedUsers,
 } from "../controllers/user.controllers.js";
@@ -25,5 +27,7 @@ userRouter.get("/profile/:userName", isAuth, getProfile);
 userRouter.get("/follow/:targetUserId", isAuth, follow);
 userRouter.get("/followinglist", isAuth, followingList);
 userRouter.get("/search", isAuth, search);
+userRouter.get("/getallnotification", isAuth, getAllNotfications);
+userRouter.get("/markasread/:notificationId", isAuth, markAsRead);
 
 export default userRouter;

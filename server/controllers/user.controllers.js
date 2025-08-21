@@ -1,5 +1,7 @@
 import User from "../models/user.model.js";
 import uploadOnCloudinary from "../config/cloudinary.js";
+import Notification from "../models/notification.model.js";
+import { io } from "../socket.js";
 
 export const getCurrentUser = async (req, res) => {
   try {
@@ -121,6 +123,24 @@ export const follow = async (req, res) => {
     } else {
       currentUser.following.push(targetUserId);
       targetUser.followers.push(currentUserId);
+      if (currentUser._id != targetUser._id) {
+        const notification = await Notification.create({
+          sender: currentUser._id,
+          receiver: targetUser._id,
+          type: "follow",
+          message: "started following you",
+        });
+        const populatedNotification = await Notification.findById(
+          notification?._id
+        ).populate("sender receiver");
+        const receiverSocketId = getSocketId(targetUser._id);
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit(
+            "newNotification",
+            populatedNotification
+          );
+        }
+      }
       await currentUser.save();
       await targetUser.save();
     }
@@ -170,6 +190,36 @@ export const search = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "Error in to search user",
+      error: error.message,
+    });
+  }
+};
+
+export const getAllNotfications = async (req, res) => {
+  try {
+    const notfications = await Notification.find({
+      receiver: req.userId,
+    }).populate("sender receiver post short");
+    res.status(200).json(notfications);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error to get all notfication",
+      error: error.message,
+    });
+  }
+};
+
+export const markAsRead = async (req, res) => {
+  try {
+    const notificationId = req.params.notificationId;
+    const notfication = await Notification.findById(notificationId).populate(
+      "sender receiver post short"
+    );
+    notfication.save();
+    return res.status(200).json({ message: "Notificatio is marked as read" });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error to marking as read",
       error: error.message,
     });
   }

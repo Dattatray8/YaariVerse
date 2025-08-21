@@ -2,6 +2,7 @@ import uploadOnCloudinary from "../config/cloudinary.js";
 import User from "../models/user.model.js";
 import ShortVerse from "../models/shortVerse.model.js";
 import { io } from "../socket.js";
+import Notification from "../models/notification.model.js";
 
 export const uploadShort = async (req, res) => {
   try {
@@ -54,6 +55,25 @@ export const like = async (req, res) => {
       );
     } else {
       short.likes.push(req.userId);
+      if (short?.author?._id != req.userId) {
+        const notification = await Notification.create({
+          sender: req.userId,
+          receiver: short?.author?._id,
+          type: "like",
+          short: short?._id,
+          message: "liked your short",
+        });
+        const populatedNotification = await Notification.findById(
+          notification?._id
+        ).populate("sender receiver short");
+        const receiverSocketId = getSocketId(short?.author?._id);
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit(
+            "newNotification",
+            populatedNotification
+          );
+        }
+      }
     }
     await short.save();
     await short.populate("author", "name userName profileImage");
@@ -89,6 +109,22 @@ export const comment = async (req, res) => {
       author: req.userId,
       message,
     });
+    if (short?.author?._id != req.userId) {
+      const notification = await Notification.create({
+        sender: req.userId,
+        receiver: short?.author?._id,
+        type: "comment",
+        short: short?._id,
+        message: "commented on your short",
+      });
+      const populatedNotification = await Notification.findById(
+        notification?._id
+      ).populate("sender receiver short");
+      const receiverSocketId = getSocketId(short?.author?._id);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newNotification", populatedNotification);
+      }
+    }
     await short.save();
     await short.populate("author", "name userName profileImage");
     await short.populate("comments.author");
