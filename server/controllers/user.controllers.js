@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import uploadOnCloudinary from "../config/cloudinary.js";
 import Notification from "../models/notification.model.js";
-import { io } from "../socket.js";
+import { getSocketId, io } from "../socket.js";
 
 export const getCurrentUser = async (req, res) => {
   try {
@@ -199,7 +199,9 @@ export const getAllNotfications = async (req, res) => {
   try {
     const notfications = await Notification.find({
       receiver: req.userId,
-    }).populate("sender receiver post short");
+    })
+      .populate("sender receiver post short")
+      .sort({ createdAt: -1 });
     res.status(200).json(notfications);
   } catch (error) {
     return res.status(500).json({
@@ -211,11 +213,28 @@ export const getAllNotfications = async (req, res) => {
 
 export const markAsRead = async (req, res) => {
   try {
-    const notificationId = req.params.notificationId;
-    const notfication = await Notification.findById(notificationId).populate(
-      "sender receiver post short"
-    );
-    notfication.save();
+    const { notificationId } = req.body;
+    if (Array.isArray(notificationId)) {
+      await Notification.updateMany(
+        {
+          _id: { $in: notificationId },
+          receiver: req.userId,
+        },
+        {
+          $set: { isRead: true },
+        }
+      );
+    } else {
+      await Notification.findOneAndUpdate(
+        {
+          _id: { $in: notificationId },
+          receiver: req.userId,
+        },
+        {
+          $set: { isRead: true },
+        }
+      );
+    }
     return res.status(200).json({ message: "Notificatio is marked as read" });
   } catch (error) {
     return res.status(500).json({

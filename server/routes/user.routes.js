@@ -28,6 +28,6 @@ userRouter.get("/follow/:targetUserId", isAuth, follow);
 userRouter.get("/followinglist", isAuth, followingList);
 userRouter.get("/search", isAuth, search);
 userRouter.get("/getallnotification", isAuth, getAllNotfications);
-userRouter.get("/markasread/:notificationId", isAuth, markAsRead);
+userRouter.post("/markasread", isAuth, markAsRead);
 
 export default userRouter;

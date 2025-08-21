@@ -18,6 +18,12 @@ import Messages from "../pages/Messages";
 import Chatting from "../pages/Chatting";
 import useFollowingList from "../hooks/useFollowingList";
 import Search from "../pages/Search";
+import useAllNotifications from "../hooks/useAllNotifications";
+import Notifications from "../pages/Notifications";
+import { useEffect } from "react";
+import { useSocket } from "../hooks/useSocket";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotificationData } from "../redux/userSlice";
 
 function AppRoutes() {
   useAllPosts();
@@ -26,6 +32,18 @@ function AppRoutes() {
   useAllShorts();
   useAllStories();
   useFollowingList();
+  useAllNotifications();
+
+  const { socket } = useSocket();
+  const { notificationData } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    socket?.on("newNotification", (noti) => {
+      dispatch(setNotificationData([...notificationData, noti]));
+    });
+    return () => socket?.off("newNotification");
+  }, [socket, dispatch]);
 
   return (
     <Routes>
@@ -48,6 +66,7 @@ function AppRoutes() {
       <Route path="/messages" element={<Messages />} />
       <Route path="/chat/:userName" element={<Chatting />} />
       <Route path="/search" element={<Search />} />
+      <Route path="/notifications" element={<Notifications />} />
     </Routes>
   );
 }

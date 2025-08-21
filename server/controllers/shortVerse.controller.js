@@ -1,7 +1,7 @@
 import uploadOnCloudinary from "../config/cloudinary.js";
 import User from "../models/user.model.js";
 import ShortVerse from "../models/shortVerse.model.js";
-import { io } from "../socket.js";
+import { getSocketId, io } from "../socket.js";
 import Notification from "../models/notification.model.js";
 
 export const uploadShort = async (req, res) => {

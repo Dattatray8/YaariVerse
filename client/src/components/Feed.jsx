@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 function Feed() {
   const { postData } = useSelector((state) => state.post);
-  const { userData } = useSelector((state) => state.user);
+  const { userData, notificationData } = useSelector((state) => state.user);
   const { storyList, currentUserStory } = useSelector((state) => state.story);
   const navigation = useNavigate();
 
@@ -19,8 +19,15 @@ function Feed() {
           <img src={logo} alt="Yaari verse logo" className="w-14" />
           <p className="text-white text-xl font-semibold">Yaariverse</p>
         </div>
-        <div className="flex gap-4 justify-center items-center">
-          <Heart className="text-white cursor-pointer" />
+        <div className="flex gap-4 justify-center items-center relative">
+          <Heart
+            className="text-white cursor-pointer"
+            onClick={() => navigation("/notifications")}
+          />
+          {notificationData?.length > 0 &&
+            notificationData.some((n) => n?.isRead == false) && (
+              <div className="absolute w-2 h-2 bg-blue-600 rounded-full top-0 right-10"></div>
+            )}
           <MessagesSquare
             className="text-white cursor-pointer"
             onClick={() => navigation("/messages")}

@@ -6,9 +6,12 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { setUserData } from "../redux/userSlice";
 import OtherUsers from "./OtherUsers";
+import { useNavigate } from "react-router-dom";
 
 function LeftHome() {
   const dispatch = useDispatch();
+  const { notificationData } = useSelector((state) => state.user);
+  const navigation = useNavigate();
   const handleLogOut = async () => {
     try {
       await axios
@@ -25,12 +28,19 @@ function LeftHome() {
   const { userData, suggestedUsers } = useSelector((state) => state.user);
   return (
     <div className="w-[25%] hidden lg:flex min-h-[100vh] bg-gradient-to-br from-[#0a0a0a] to-[#181817] border-r-2 border-[#ededec22] flex-col gap-2">
-      <div className="flex justify-between items-center px-4 py-2">
+      <div className="flex justify-between items-center px-4 py-2 relative">
         <div className="flex items-center">
           <img src={logo} alt="Yaari verse logo" className="w-14" />
           <p className="text-white text-xl font-semibold">Yaariverse</p>
         </div>
-        <Heart className="text-white" />
+        <Heart
+          className="text-white cursor-pointer"
+          onClick={() => navigation("/notifications")}
+        />
+        {notificationData?.length > 0 &&
+          notificationData.some((n) => n?.isRead == false) && (
+            <div className="absolute w-2 h-2 bg-blue-600 rounded-full top-6 right-4"></div>
+          )}
       </div>
       <div className="flex items-center gap-4 px-4 justify-center">
         <div className="w-[20%] cursor-pointer">
