@@ -24,7 +24,7 @@ function Navbar() {
           />
         </svg>
       </div>
-      <div>
+      <div onClick={() => navigation("/search")}>
         <Search className="text-white cursor-pointer" />
       </div>
       <div onClick={() => navigation("/upload")}>

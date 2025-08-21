@@ -188,7 +188,7 @@ function VideoPlayer({ media, data }) {
 
     socket?.on("commentedShort", (updatedData) => {
       const updatedShort = shortData?.map((p) =>
-        p._id == updatedData?.shordId
+        p._id == updatedData?.shortId
           ? { ...p, comments: updatedData?.comments }
           : p
       );

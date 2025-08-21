@@ -6,6 +6,7 @@ import {
   followingList,
   getCurrentUser,
   getProfile,
+  search,
   suggestedUsers,
 } from "../controllers/user.controllers.js";
 import { upload } from "../middlewares/multur.js";
@@ -23,5 +24,6 @@ userRouter.post(
 userRouter.get("/profile/:userName", isAuth, getProfile);
 userRouter.get("/follow/:targetUserId", isAuth, follow);
 userRouter.get("/followinglist", isAuth, followingList);
+userRouter.get("/search", isAuth, search);
 
 export default userRouter;

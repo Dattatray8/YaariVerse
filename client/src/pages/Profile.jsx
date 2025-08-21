@@ -9,7 +9,13 @@ import {
   setUserData,
   toggleFollow,
 } from "../redux/userSlice";
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  Settings,
+  MessageCircle,
+  UserPlus,
+  UserMinus,
+} from "lucide-react";
 import { useState } from "react";
 import user from "../assets/user.png";
 import Navbar from "../components/Navbar";
@@ -80,154 +86,228 @@ function Profile() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#0a0a0a] to-[#181817] w-full min-h-[100vh] flex flex-col md:gap-8 gap-4">
-      {isCurrentUser ? (
-        <div className="w-full py-4 px-6 md:px-8 flex items-center justify-between sm:h-20 h-16">
-          <ArrowLeft
-            className="text-white h-full cursor-pointer"
-            onClick={() => navigation(-1)}
+    <div className="bg-gradient-to-br from-[#0a0a0a] to-[#181817] w-full min-h-screen flex flex-col">
+      <div className="w-full p-4 flex items-center justify-between border-b border-gray-800/50">
+        <ArrowLeft
+          className="text-white h-6 w-6 cursor-pointer hover:text-blue-400 transition-colors"
+          onClick={() => navigation(-1)}
+        />
+        <h1 className="text-white font-semibold text-lg">
+          @{profileData?.userName}
+        </h1>
+        {isCurrentUser ? (
+          <Settings
+            className="text-white h-6 w-6 cursor-pointer hover:text-blue-400 transition-colors"
+            onClick={() => navigation("/editprofile")}
           />
-          <p className="text-white font-semibold">{profileData?.userName}</p>
-          <p
-            className="text-blue-500 hover:scale-105 transition-all hover:text-blue-400 text-md xl:text-xl font-semibold cursor-pointer"
-            onClick={handleLogOut}
-          >
-            Logout
-          </p>
-        </div>
-      ) : (
-        <div className="w-full p-4 flex items-center h-20">
-          <ArrowLeft
-            className="text-white h-full cursor-pointer"
-            onClick={() => navigation(-1)}
-          />
-          <div className="w-[80%] m-auto text-center">
-            <p className="text-white font-semibold">{profileData?.userName}</p>
+        ) : (
+          <div className="w-6 h-6"></div>
+        )}
+      </div>
+
+      <div className="px-4 sm:px-6 py-6">
+        {isCurrentUser && (
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={handleLogOut}
+              className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
+            >
+              Logout
+            </button>
+          </div>
+        )}
+
+        <div className="flex justify-center mb-6">
+          <div className="relative">
+            <img
+              src={profileData?.profileImage || user}
+              alt="Profile"
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-gray-800 bg-gray-800"
+            />
           </div>
         </div>
-      )}
-      <div className="w-full lg:px-[25%] flex justify-start px-10 h-20 items-center gap-10 min-[425px]:justify-center min-[425px]:gap-15">
-        <div className="w-18 h-18">
-          <img
-            src={profileData?.profileImage || user}
-            alt="User Image"
-            className="object-cover w-full h-full rounded-full"
-          />
-        </div>
-        <div className="flex flex-col gap-1 justify-center">
-          <p className="text-white font-semibold text-lg">
+
+        <div className="text-center">
+          <h2 className="text-white text-2xl font-bold mb-1">
             {profileData?.name}
-          </p>
-          <p className="text-gray-400 text-sm font-semibold">
+          </h2>
+          <p className="text-gray-400 text-base mb-2">
             @{profileData?.userName}
           </p>
-          <p className="text-white font-semibold text-sm">
-            {profileData?.profession}
-          </p>
+
+          {profileData?.profession && (
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 mb-4">
+              <span className="text-blue-400 text-sm font-medium">
+                {profileData.profession}
+              </span>
+            </div>
+          )}
+
+          {profileData?.bio && (
+            <p className="text-gray-300 text-sm leading-relaxed mb-4 max-w-md">
+              {profileData.bio}
+            </p>
+          )}
+
+          <div className="flex items-center justify-center gap-6 mb-6">
+            <div className="text-center">
+              <p className="text-white font-bold text-lg">
+                {profileData?.posts?.length || 0}
+              </p>
+              <p className="text-gray-400 text-xs">Posts</p>
+            </div>
+            <div className="text-center">
+              <p className="text-white font-bold text-lg">
+                {profileData?.followers?.length || 0}
+              </p>
+              <p className="text-gray-400 text-xs">Followers</p>
+            </div>
+            <div className="text-center">
+              <p className="text-white font-bold text-lg">
+                {profileData?.following?.length || 0}
+              </p>
+              <p className="text-gray-400 text-xs">Following</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3 justify-center">
+            {isCurrentUser ? (
+              <button
+                onClick={() => navigation("/editprofile")}
+                className="flex items-center gap-2 px-6 py-2.5 bg-white text-black font-semibold rounded-xl hover:bg-gray-100 transition-all duration-300 flex-1 sm:flex-none justify-center"
+              >
+                <Settings className="w-4 h-4" />
+                Edit Profile
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={handleFollow}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 flex-1 sm:flex-none justify-center ${
+                    isFollowing
+                      ? "bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500/30"
+                      : "bg-blue-500/20 text-blue-400 border border-blue-500/50 hover:bg-blue-500/30"
+                  }`}
+                >
+                  {isFollowing ? (
+                    <UserMinus className="w-4 h-4" />
+                  ) : (
+                    <UserPlus className="w-4 h-4" />
+                  )}
+                  {isFollowing ? "Unfollow" : "Follow"}
+                </button>
+                <button
+                  onClick={() => {
+                    dispatch(setSelectedUser(profileData));
+                    navigation(`/chat/${profileData?.userName}`);
+                  }}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-gray-700/50 text-white border border-gray-600/50 rounded-xl hover:bg-gray-700/70 font-semibold transition-all duration-300 flex-1 sm:flex-none justify-center"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Message
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="w-full lg:px-[25%] flex justify-center items-center sm:gap-12 gap-12 mt-2">
-        <p className="text-white font-semibold hidden sm:block">
-          {profileData?.posts.length} Posts
-        </p>
-        <p className="text-white font-semibold">
-          {profileData?.followers.length} Followers
-        </p>
-        <p className="text-white font-semibold">
-          {profileData?.following.length} Following
-        </p>
-      </div>
-
-      {profileData?.bio && (
-        <div className="w-full lg:px-[30%] sm:px-[10%] md:px-[20%] flex justify-start items-center text-white px-10">
-          {profileData?.bio || "users bio"}
-        </div>
-      )}
-
-      {isCurrentUser ? (
-        <div className="w-full lg:px-[30%] flex justify-center items-center">
-          <button
-            className="bg-white font-semibold py-2 w-3/4 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700"
-            onClick={() => navigation("/editprofile")}
-          >
-            Edit Profile
-          </button>
-        </div>
-      ) : (
-        <div className="w-full lg:px-[30%] flex justify-center items-center px-2 gap-2">
-          <button
-            className="bg-white font-semibold py-2 w-1/2 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700"
-            onClick={handleFollow}
-          >
-            {isFollowing ? "UnFollow" : "Follow"}
-          </button>
-          <button
-            className="bg-white font-semibold py-2 w-1/2 rounded-md cursor-pointer hover:bg-[#ffffffdd] transition-all duration-700"
-            onClick={() => {
-              dispatch(setSelectedUser(profileData));
-              navigation(`/chat/${profileData?.userName}`);
-            }}
-          >
-            Message
-          </button>
-        </div>
-      )}
-
-      {isCurrentUser ? (
-        <div className="w-full lg:px-[30%] flex justify-center items-center px-2 gap-2">
-          <p
-            className={`w-1/2 cursor-pointer text-white text-center pb-3 ${
-              nav === "posts" && "border-b-2 border-white"
-            } transition-all `}
-            onClick={() => setNav("posts")}
-          >
-            Posts
-          </p>
-          <p
-            className={`w-1/2 cursor-pointer text-white text-center pb-3 ${
-              nav === "saved" && "border-b-2 border-white"
-            } transition-all `}
-            onClick={() => setNav("saved")}
-          >
-            Saved
-          </p>
-        </div>
-      ) : (
-        <div className="w-full lg:px-[30%] flex justify-center items-center px-2 gap-2 mt-1">
-          <p className="w-full cursor-pointer text-white text-center pb-3 border-b-2 border-white transition-all ">
-            Posts
-          </p>
-        </div>
-      )}
-
-      {nav === "posts" && (
-        <div className="w-full lg:px-[30%] flex justify-center items-center flex-col gap-3">
-          {postData.map(
-            (post, index) =>
-              post?.author?._id == profileData?._id && (
-                <div className="border-b-2 border-[#ededec]" key={index}>
-                  <Post post={post} />
-                </div>
-              )
+      <div className="sticky top-0 bg-gradient-to-br from-[#0a0a0a]/95 to-[#181817]/95 backdrop-blur-md border-b border-gray-800/50 z-40">
+        <div className="flex">
+          {isCurrentUser ? (
+            <>
+              <button
+                onClick={() => setNav("posts")}
+                className={`flex-1 py-4 text-center font-medium transition-all duration-300 ${
+                  nav === "posts"
+                    ? "text-blue-400 border-b-2 border-blue-400"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Posts
+              </button>
+              <button
+                onClick={() => setNav("saved")}
+                className={`flex-1 py-4 text-center font-medium transition-all duration-300 ${
+                  nav === "saved"
+                    ? "text-blue-400 border-b-2 border-blue-400"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Saved
+              </button>
+            </>
+          ) : (
+            <div className="flex-1 py-4 text-center font-medium text-blue-400 border-b-2 border-blue-400">
+              Posts
+            </div>
           )}
         </div>
-      )}
+      </div>
 
-      {nav === "saved" && (
-        <div className="w-full lg:px-[30%] flex justify-center items-center flex-col gap-3 mb-10">
-          {userData?.saved?.map((postId) => {
-            const post = postData.find((p) => p._id === postId);
-            if (!post) return null;
-            return (
-              <div className="border-b-2 border-[#ededec]" key={post._id}>
-                <Post post={post} />
+      <div className="flex-1 pb-24">
+        {nav === "posts" && (
+          <div className="max-w-2xl mx-auto px-4">
+            {postData.filter((post) => post?.author?._id === profileData?._id)
+              .length === 0 ? (
+              <div className="text-center py-16">
+                <div className="text-4xl mb-4">📝</div>
+                <p className="text-gray-400 font-medium mb-2">No posts yet</p>
+                <p className="text-gray-500 text-sm">
+                  {isCurrentUser
+                    ? "Share your first post!"
+                    : "This user hasn't posted anything yet."}
+                </p>
               </div>
-            );
-          })}
-        </div>
-      )}
-      <div className="flex justify-center">
+            ) : (
+              <div className="space-y-6 py-6">
+                {postData.map(
+                  (post, index) =>
+                    post?.author?._id === profileData?._id && (
+                      <div
+                        key={index}
+                        className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl overflow-hidden hover:border-gray-600/50 transition-all duration-300"
+                      >
+                        <Post post={post} />
+                      </div>
+                    )
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {nav === "saved" && (
+          <div className="max-w-2xl mx-auto px-4">
+            {!userData?.saved || userData.saved.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="text-4xl mb-4">🔖</div>
+                <p className="text-gray-400 font-medium mb-2">No saved posts</p>
+                <p className="text-gray-500 text-sm">
+                  Posts you save will appear here
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-6 py-6">
+                {userData.saved.map((postId) => {
+                  const post = postData.find((p) => p._id === postId);
+                  if (!post) return null;
+                  return (
+                    <div
+                      key={post._id}
+                      className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl overflow-hidden hover:border-gray-600/50 transition-all duration-300"
+                    >
+                      <Post post={post} />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 flex justify-center bg-gradient-to-br from-[#0a0a0a]/95 to-[#181817]/95 backdrop-blur-md border-t border-gray-800/50 z-50">
         <Navbar />
       </div>
     </div>

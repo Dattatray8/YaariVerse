@@ -17,6 +17,7 @@ import useAllStories from "../hooks/useAllStories";
 import Messages from "../pages/Messages";
 import Chatting from "../pages/Chatting";
 import useFollowingList from "../hooks/useFollowingList";
+import Search from "../pages/Search";
 
 function AppRoutes() {
   useAllPosts();
@@ -46,6 +47,7 @@ function AppRoutes() {
       <Route path="/story/:userName" element={<Story />} />
       <Route path="/messages" element={<Messages />} />
       <Route path="/chat/:userName" element={<Chatting />} />
+      <Route path="/search" element={<Search />} />
     </Routes>
   );
 }
