@@ -1,4 +1,4 @@
-import logo from "/public/icon.png";
+import logo from "/icon.png";
 import { Heart } from "lucide-react";
 import user from "../assets/user.png";
 import { useDispatch, useSelector } from "react-redux";

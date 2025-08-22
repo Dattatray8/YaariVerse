@@ -1,5 +1,5 @@
 import { Heart, MessagesSquare } from "lucide-react";
-import logo from "/public/icon.png";
+import logo from "/icon.png";
 import StorySection from "./StorySection";
 import Navbar from "./Navbar";
 import { useSelector } from "react-redux";
