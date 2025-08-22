@@ -18,7 +18,7 @@ function LeftHome() {
         .get(serverUrl + "/api/auth/signout", {
           withCredentials: true,
         })
-        .then((e) => {
+        .then(() => {
           dispatch(setUserData(null));
         });
     } catch (error) {

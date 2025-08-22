@@ -55,7 +55,7 @@ function Profile() {
         .get(serverUrl + "/api/auth/signout", {
           withCredentials: true,
         })
-        .then((e) => {
+        .then(() => {
           dispatch(setUserData(null));
           navigation("/signin");
         });

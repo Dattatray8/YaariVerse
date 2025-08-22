@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setPostData } from "../redux/postSlice";
 import { setShortData } from "../redux/shortVerseSlice";
-import { setUserData } from "../redux/userSlice";
 import { setCurrentUserStory } from "../redux/storySlice";
 
 function Upload() {

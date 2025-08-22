@@ -13,7 +13,7 @@ import "../index.css";
 import user from "../assets/user.png";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFollowUser } from "../utils/followService";
-import { setFollowing, setUserData, toggleFollow } from "../redux/userSlice";
+import { setFollowing, toggleFollow } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import { setShortData } from "../redux/shortVerseSlice";
 import axios from "axios";

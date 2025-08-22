@@ -9,6 +9,6 @@ export const toggleFollowUser = async (userId) => {
     );
     return result.data; 
   } catch (error) {
-    throw error;
+    console.log(error)
   }
 };
