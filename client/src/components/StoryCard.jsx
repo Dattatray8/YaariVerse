@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import user from "../assets/user.png";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Eye, X } from "lucide-react";
+import BlueTick from "./BlueTick";
 
 function StoryCard({ storyData }) {
   const navigation = useNavigate();
@@ -110,7 +111,8 @@ function StoryCard({ storyData }) {
               className="border rounded-full h-10 object-cover w-10 border-white"
             />
             <p className="font-semibold text-white truncate max-w-30">
-              {storyData?.author?.userName}
+              {storyData?.author?.userName}{" "}
+              {storyData?.author?.userName === "yaariverse" && <BlueTick />}
             </p>
           </div>
           {!isCurrentUser && (

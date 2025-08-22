@@ -22,6 +22,7 @@ import Navbar from "../components/Navbar";
 import { toggleFollowUser } from "../utils/followService";
 import Post from "../components/Post";
 import { setSelectedUser } from "../redux/chatSlice";
+import BlueTick from "../components/BlueTick";
 
 function Profile() {
   const { userName } = useParams();
@@ -129,7 +130,8 @@ function Profile() {
 
         <div className="text-center">
           <h2 className="text-white text-2xl font-bold mb-1">
-            {profileData?.name}
+            {profileData?.name}{" "}
+            {profileData?.userName === "yaariverse" && <BlueTick />}
           </h2>
           <p className="text-gray-400 text-base mb-2">
             @{profileData?.userName}

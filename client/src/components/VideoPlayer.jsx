@@ -19,6 +19,7 @@ import { setShortData } from "../redux/shortVerseSlice";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { useSocket } from "../hooks/useSocket";
+import BlueTick from "./BlueTick";
 
 function VideoPlayer({ media, data }) {
   let videoTag = useRef();
@@ -258,16 +259,17 @@ function VideoPlayer({ media, data }) {
       <div className="absolute bottom-2 flex flex-col w-full h-20 px-4 gap-2">
         <div className="flex items-center gap-3">
           <div
-            className="flex gap-3 items-center sm:w-1/3 w-1/2"
+            className="flex gap-3 items-center"
             onClick={() => navigation(`/profile/${data?.author?.userName}`)}
           >
             <img
               src={data?.author?.profileImage || user}
               alt=""
-              className="border rounded-full h-10 w-10 border-white"
+              className="border rounded-full h-10 w-10 border-white object-cover"
             />
-            <p className="font-semibold text-white max-w-1/2 truncate">
-              {data?.author?.userName}
+            <p className="font-semibold text-white truncate">
+              {data?.author?.userName}{" "}
+              {data?.author?.userName === "yaariverse" && <BlueTick />}
             </p>
           </div>
           {!isCurrentUser && (
@@ -318,7 +320,7 @@ function VideoPlayer({ media, data }) {
           <div className="h-10 flex justify-end items-center px-5">
             <X onClick={() => setShowComment(false)} />
           </div>
-          <div className="flex gap-4 items-center justify-center">
+          <div className="flex gap-4 items-center justify-center px-4">
             <img
               src={userData?.profileImage || user}
               alt="User profile image"
@@ -363,6 +365,9 @@ function VideoPlayer({ media, data }) {
                       <div className="bg-gray-900 rounded-2xl px-4 py-2 border border-gray-800">
                         <p className="text-blue-400 text-xs font-medium mb-1">
                           {com?.author?.userName || "Unknown User"}
+                          {com?.author?.userName === "yaariverse" && (
+                            <BlueTick />
+                          )}
                         </p>
                         <p className="text-white text-sm leading-relaxed break-words">
                           {com?.message}

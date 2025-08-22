@@ -14,6 +14,7 @@ import { setFollowing, setUserData, toggleFollow } from "../redux/userSlice";
 import { toggleFollowUser } from "../utils/followService";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
+import BlueTick from "./BlueTick";
 
 function Post({ post }) {
   const { userData, following } = useSelector((state) => state.user);
@@ -129,10 +130,11 @@ function Post({ post }) {
           <img
             src={post?.author?.profileImage || user}
             alt="User profile image"
-            className="w-14 h-14 rounded-full"
+            className="w-14 h-14 rounded-full object-cover"
           />
           <p className="w-30 truncate font-semibold text-lg">
-            {post?.author?.userName}
+            {post?.author?.userName}{" "}
+            {post?.author?.userName === "yaariverse" && <BlueTick />}
           </p>
         </div>
         {!isCurrentUser && (
@@ -241,7 +243,10 @@ function Post({ post }) {
                     <div className="flex-1 min-w-0">
                       <div className="bg-gray-900 rounded-2xl px-4 py-2 border border-gray-800">
                         <p className="text-blue-400 text-xs font-medium mb-1">
-                          {com?.author?.userName || "Unknown User"}
+                          {com?.author?.userName || "Unknown User"}{" "}
+                          {com?.author?.userName === "yaariverse" && (
+                            <BlueTick />
+                          )}
                         </p>
                         <p className="text-white text-sm leading-relaxed break-words">
                           {com?.message}

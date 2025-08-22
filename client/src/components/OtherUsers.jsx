@@ -3,6 +3,7 @@ import userImg from "../assets/user.png";
 import { setFollowing, toggleFollow } from "../redux/userSlice";
 import { toggleFollowUser } from "../utils/followService";
 import { useDispatch, useSelector } from "react-redux";
+import BlueTick from "./BlueTick";
 
 function OtherUsers({ user }) {
   const { following } = useSelector((state) => state.user);
@@ -34,7 +35,7 @@ function OtherUsers({ user }) {
         <div className="flex justify-between w-[80%] items-center cursor-pointer">
           <div>
             <div className="text-[#ededec] text-[1.3em] font-semibold w-30 truncate">
-              {user.userName}
+              {user.userName} {user?.userName === "yaariverse" && <BlueTick />}
             </div>
             <div className="text-[#ededecaa] font-semibold w-30 truncate">
               {user.name}
