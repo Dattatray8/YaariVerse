@@ -33,6 +33,22 @@ function AppRoutes() {
   useAllStories();
   useFollowingList();
   useAllNotifications();
+  const getTimeAgo = (dateString) => {
+    const now = new Date();
+    const notificationDate = new Date(dateString);
+    const diffInMinutes = Math.floor((now - notificationDate) / (1000 * 60));
+
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays}d ago`;
+
+    return notificationDate.toLocaleDateString();
+  };
 
   const { socket } = useSocket();
   const { notificationData } = useSelector((state) => state.user);
@@ -41,9 +57,19 @@ function AppRoutes() {
   useEffect(() => {
     socket?.on("newNotification", (noti) => {
       dispatch(setNotificationData([...notificationData, noti]));
+      if (Notification.permission === "granted") {
+        new Notification(`${noti?.sender?.name} ${noti?.message}`, {
+          body: `${getTimeAgo(noti?.createdAt)}`,
+          icon: `${noti?.sender?.profileImage}`,
+        });
+      }
     });
     return () => socket?.off("newNotification");
   }, [socket, dispatch]);
+
+  useEffect(() => {
+    Notification.requestPermission();
+  }, []);
 
   return (
     <Routes>

@@ -150,7 +150,8 @@ export const getAllShorts = async (req, res) => {
   try {
     const shorts = await ShortVerse.find({})
       .populate("author", "name userName profileImage")
-      .populate("comments.author");
+      .populate("comments.author")
+      .sort({ createdAt: -1 });
     return res
       .status(200)
       .json({ success: true, message: "Shorts get successfully", shorts });
