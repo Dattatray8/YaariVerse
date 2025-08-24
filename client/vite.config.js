@@ -14,9 +14,10 @@ export default defineConfig({
       },
       manifest: {
         name: "Yaari Verse",
-        short_name: "YV",
+        short_name: "Yaari Verse",
         description: "Share your life",
         display: "standalone",
+        version: "1.0.1",
         start_url: "/",
         icons: [
           {

@@ -2,23 +2,48 @@ import { ArrowLeft, MessageCircle, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import usercopy from "../assets/usercopy.png";
+import axios from "axios";
+import { serverUrl } from "../App";
 
 function Messages() {
   const navigation = useNavigate();
   const { onlineUsers } = useSocket();
   const { userData } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
+  const [unFollowedChatUsers, setUnFollowedChatUsers] = useState([]);
 
   const onlineFollowing =
     userData?.following?.filter((user) => onlineUsers?.includes(user?._id)) ||
     [];
 
-  const allFollowing =
-    userData?.following?.filter((user) =>
-      user?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    const getPrevChatUsers = async () => {
+      try {
+        const res = await axios.get(`${serverUrl}/api/message/prevchat`, {
+          withCredentials: true,
+        });
+        console.log(res?.data?.users);
+        setUnFollowedChatUsers(res?.data?.users);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getPrevChatUsers();
+  }, [userData]);
+
+  const allFollowing = userData?.following;
+  const chatUsers = [...allFollowing, ...unFollowedChatUsers];
+  const allChatUsers =
+    chatUsers.filter((user) =>
+      (user?.name || user?.userName)
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
     ) || [];
+
+  console.log(allChatUsers);
 
   const handleChatClick = (userName) => {
     navigation(`/chat/${userName}`);
@@ -100,8 +125,8 @@ function Messages() {
           ALL CONVERSATIONS
         </h2>
         <div className="space-y-2">
-          {allFollowing.length > 0 ? (
-            [...allFollowing]
+          {allChatUsers.length > 0 ? (
+            [...allChatUsers]
               .sort((a, b) => {
                 const aOnline = onlineUsers?.includes(a?._id);
                 const bOnline = onlineUsers?.includes(b?._id);
@@ -119,7 +144,7 @@ function Messages() {
                       <div className="w-14 h-14 bg-gradient-to-br from-gray-600 to-gray-700 rounded-2xl overflow-hidden">
                         <img
                           src={user?.profileImage || usercopy}
-                          alt={user?.name}
+                          alt={user?.name || user?.userName}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           onError={(e) => {
                             e.target.src = `https://ui-avatars.com/api/?name=${user?.name}&background=4b5563&color=ffffff&size=56&rounded=true`;
@@ -134,7 +159,7 @@ function Messages() {
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <h3 className="text-white font-semibold group-hover:text-blue-400 transition-colors">
-                          {user?.name}
+                          {user?.name || user?.userName}
                         </h3>
                       </div>
                       <p className="text-gray-400 text-sm truncate mt-1">

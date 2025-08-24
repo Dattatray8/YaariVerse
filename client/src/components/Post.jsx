@@ -24,7 +24,7 @@ function Post({ post }) {
   const { postData } = useSelector((state) => state.post);
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
-  const isFollowing = following.includes(post?.author?._id);
+  const isFollowing = following?.includes(post?.author?._id);
   const navigation = useNavigate();
 
   useEffect(() => {
@@ -59,7 +59,7 @@ function Post({ post }) {
       );
       const updatedPost = result?.data?.post;
       const updatedPosts = postData.map((p) =>
-        p._id == post._id ? updatedPost : p
+        p._id === post._id ? updatedPost : p
       );
       setComment("");
       dispatch(setPostData(updatedPosts));
@@ -131,6 +131,7 @@ function Post({ post }) {
             src={post?.author?.profileImage || user}
             alt="User profile image"
             className="w-14 h-14 rounded-full object-cover"
+            loading="lazy"
           />
           <p className="w-30 truncate font-semibold text-lg">
             {post?.author?.userName}{" "}
@@ -152,6 +153,7 @@ function Post({ post }) {
             <img
               src={post?.media}
               className="object-cover w-full rounded-2xl"
+              loading="lazy"
             />
           </div>
         ) : (

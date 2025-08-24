@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import {
   getAllMessages,
+  getPrevUserChat,
   sendMessage,
 } from "../controllers/message.controller.js";
 import isAuth from "../middlewares/isAuth.js";
@@ -15,6 +16,6 @@ messageRouter.post(
   sendMessage
 );
 messageRouter.get("/getAll/:receiverId", isAuth, getAllMessages);
-// messageRouter.get("/prevchat", isAuth, getPrevUserChat);
+messageRouter.get("/prevchat", isAuth, getPrevUserChat);
 
 export default messageRouter;

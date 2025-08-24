@@ -10,6 +10,7 @@ import shortsRouter from "./routes/shortVerse.routes.js";
 import storyRouter from "./routes/story.routes.js";
 import messageRouter from "./routes/message.routes.js";
 import { app, server } from "./socket.js";
+import geminiRouter from "./routes/gemini.routes.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/post", postRouter);
 app.use("/api/short", shortsRouter);
 app.use("/api/story", storyRouter);
 app.use("/api/message", messageRouter);
+app.use("/api/ai", geminiRouter);
 
 server.listen(process.env.PORT || 5000, () => {
   dbConnection();

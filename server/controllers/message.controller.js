@@ -1,6 +1,7 @@
 import uploadOnCloudinary from "../config/cloudinary.js";
 import Conversation from "../models/conversation.mode.js";
 import Message from "../models/messages.model.js";
+import User from "../models/user.model.js";
 import { getSocketId, io } from "../socket.js";
 
 export const sendMessage = async (req, res) => {
@@ -69,31 +70,32 @@ export const getAllMessages = async (req, res) => {
   }
 };
 
-// optional if we want to show on recent chat users
+export const getPrevUserChat = async (req, res) => {
+  try {
+    const currentUserId = req.userId;
+    const currentUser = await User.findById(currentUserId).select("-password");
+    const conversations = await Conversation.find({
+      participants: { $in: currentUserId },
+    })
+      .populate("participants", "_id userName profileImage") 
+      .sort({ updatedAt: -1 }); 
 
-// export const getPrevUserChat = async (req, res) => {
-//   try {
-//     const currentUserId = req.userId;
-//     const conversations = await Conversation.find({
-//       participants: currentUserId,
-//     })
-//       .populate("participants")
-//       .sort({ updatedAt: -1 });
-//       const userMap = {}
-//     conversations.forEach((conv)=> {
-//         conv.participants.forEach(user=>{
-//             if(user._id !==currentUserId){
-//                 userMap(user._id)=user
-//             }
-//         })
-//     })
-//     const prevUsers = Object.values(userMap);
-//     return res.status(200).json(prevUsers);
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: "Error to get prev chat",
-//       error: error.message,
-//     });
-//   }
-// };
+    const userMap = []; 
+    conversations.forEach((conv) => {
+      conv.participants.forEach((user) => {
+        if (user._id.toString() !== currentUserId && !currentUser?.following.includes(user?._id)) {
+          userMap.push(user);
+        }
+      });
+    });
+
+    return res.status(200).json({ success: true, users: userMap });
+  } catch (error) {
+    console.error("Error in getPrevUserChat:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching previous chat users",
+      error: error.message,
+    });
+  }
+};

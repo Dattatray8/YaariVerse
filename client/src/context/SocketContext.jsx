@@ -32,7 +32,7 @@ export const SocketProvider = ({ children }) => {
         setSocket(null);
       }
     }
-  }, [userData?._id]);
+  }, [userData]);
 
   const value = {
     onlineUsers,

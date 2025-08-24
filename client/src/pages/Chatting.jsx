@@ -97,7 +97,7 @@ function Chatting() {
 
   return (
     <div className="w-full h-[100vh] bg-[#181817] relative">
-      <div className="flex gap-4 p-6 z-[100] top-0 w-full items-center fixed bg-[#181817]">
+      <div className="flex gap-4 p-6 z-[100] top-0 right-0 left-0 w-full items-center fixed bg-[#181817]">
         <ArrowLeft
           className="text-white cursor-pointer"
           onClick={() => navigation(-1)}

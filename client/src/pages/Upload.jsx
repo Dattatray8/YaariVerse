@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPostData } from "../redux/postSlice";
 import { setShortData } from "../redux/shortVerseSlice";
 import { setCurrentUserStory } from "../redux/storySlice";
+import AiIcon from "../components/AiIcon";
 
 function Upload() {
   const navigation = useNavigate();
@@ -23,6 +24,7 @@ function Upload() {
   const dispatch = useDispatch();
   const { postData } = useSelector((state) => state.post);
   const { shortData } = useSelector((state) => state.short);
+  const [loadingSpinner, setLoadingSpinner] = useState(false);
 
   const handlemedia = (e) => {
     const file = e.target.files[0];
@@ -118,6 +120,25 @@ function Upload() {
     }
   };
 
+  const fetchAIGeneratedCaption = async () => {
+    try {
+      setLoadingSpinner(true);
+      const formData = new FormData();
+      formData.append("image", backendMedia);
+
+      const res = await axios.post(`${serverUrl}/api/ai/caption`, formData, {
+        withCredentials: true,
+      });
+
+      console.log(res);
+      setCaption(res?.data?.caption);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingSpinner(false);
+    }
+  };
+
   useEffect(() => {
     if (response) {
       toast.success(response);
@@ -197,7 +218,7 @@ function Upload() {
       {frontendMedia && (
         <>
           {(uploadType === "Post" || uploadType === "Short") && (
-            <div className="w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%]">
+            <div className="w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] flex items-center relative">
               <input
                 type="text"
                 placeholder={`Enter ${uploadType} Caption`}
@@ -205,6 +226,20 @@ function Upload() {
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
               />
+              {uploadType !== "Short" && (
+                <div
+                  className="absolute right-2 cursor-pointer"
+                  onClick={fetchAIGeneratedCaption}
+                >
+                  {loadingSpinner ? (
+                    <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2">
+                      <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-blue-400"></div>
+                    </div>
+                  ) : (
+                    <AiIcon animated className="text-white" />
+                  )}
+                </div>
+              )}
             </div>
           )}
           <button
