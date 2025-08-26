@@ -23,7 +23,6 @@ function ForgotPassword() {
   const handleStep1 = async () => {
     try {
       setLoading(true);
-      console.log(email);
       await axios
         .post(
           serverUrl + "/api/auth/sendotp",
@@ -31,7 +30,6 @@ function ForgotPassword() {
           { withCredentials: true }
         )
         .then((e) => {
-          console.log(e);
           setLoading(false);
           setStep(2);
         });
@@ -53,7 +51,6 @@ function ForgotPassword() {
         )
         .then((e) => {
           setLoading(false);
-          console.log(e);
           setStep(3);
         });
     } catch (error) {
@@ -77,7 +74,6 @@ function ForgotPassword() {
         )
         .then((e) => {
           setLoading(false);
-          console.log(e);
           navigation("/signin");
         });
     } catch (error) {

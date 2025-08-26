@@ -16,7 +16,6 @@ function useAllNotifications() {
             withCredentials: true,
           })
           .then((e) => {
-            console.log(e?.data);
             dispatch(setNotificationData(e?.data));
           });
       } catch (error) {

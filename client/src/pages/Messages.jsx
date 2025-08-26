@@ -24,7 +24,6 @@ function Messages() {
         const res = await axios.get(`${serverUrl}/api/message/prevchat`, {
           withCredentials: true,
         });
-        console.log(res?.data?.users);
         setUnFollowedChatUsers(res?.data?.users);
       } catch (error) {
         console.log(error);
@@ -43,7 +42,6 @@ function Messages() {
         .includes(searchTerm.toLowerCase())
     ) || [];
 
-  console.log(allChatUsers);
 
   const handleChatClick = (userName) => {
     navigation(`/chat/${userName}`);

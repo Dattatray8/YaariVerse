@@ -57,7 +57,6 @@ function Chatting() {
         formdata,
         { withCredentials: true }
       );
-      console.log(result);
       dispatch(setMessages([...messages, result?.data?.newMessage]));
       setInput("");
       setFrontendImage(null);
@@ -73,7 +72,6 @@ function Chatting() {
         `${serverUrl}/api/message/getAll/${selectedUser?._id}`,
         { withCredentials: true }
       );
-      console.log(result.data);
       dispatch(setMessages(result?.data));
     } catch (error) {
       console.log(error);
