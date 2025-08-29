@@ -34,7 +34,7 @@ export const signUp = async (req, res) => {
     const token = await generateToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       secure: true,
       sameSite: "none",
     });
@@ -71,7 +71,7 @@ export const signIn = async (req, res) => {
     const token = await generateToken(findUsersUserName._id);
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       secure: true,
       sameSite: "none",
     });
