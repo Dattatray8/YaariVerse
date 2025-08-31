@@ -1,23 +1,19 @@
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"
-);
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"
-);
+import { initializeApp } from "firebase/app";
+import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
 
-firebase.initializeApp({
-  apiKey: "AIzaSyCTfM_bCraWc6X-fTibQ9cksX-wmH0n6hY",
-  authDomain: "push-notifications-c79a1.firebaseapp.com",
-  projectId: "push-notifications-c79a1",
-  storageBucket: "push-notifications-c79a1.firebasestorage.app",
-  messagingSenderId: "658165224243",
-  appId: "1:658165224243:web:c31d706ac165cf8ec26446",
-  measurementId: "G-HT1V6JMKSK",
-});
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
 
-const messaging = firebase.messaging();
+const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
 
-messaging.onBackgroundMessage((payload) => {
+onBackgroundMessage(messaging, (payload) => {
   console.log(
     "[firebase-messaging-sw.js] Received background message ",
     payload
