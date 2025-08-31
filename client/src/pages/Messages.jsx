@@ -37,11 +37,10 @@ function Messages() {
   const chatUsers = [...allFollowing, ...unFollowedChatUsers];
   const allChatUsers =
     chatUsers.filter((user) =>
-      (user?.name || user?.userName)
+      (user?.name || user?.userName || "")
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
     ) || [];
-
 
   const handleChatClick = (userName) => {
     navigation(`/chat/${userName}`);

@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import ShortVerse from "../models/shortVerse.model.js";
 import { getSocketId, io } from "../socket.js";
 import Notification from "../models/notification.model.js";
+import { sendPushNotification } from "../config/firebase.js";
 
 export const uploadShort = async (req, res) => {
   try {
@@ -73,6 +74,20 @@ export const like = async (req, res) => {
             populatedNotification
           );
         }
+        const targetUser = await User.findById(short?.author?._id);
+        const currentUser = await User.findById(req.userId);
+        if (targetUser?.fcmToken) {
+          try {
+            await sendPushNotification(
+              targetUser.fcmToken,
+              "New like",
+              `${currentUser?.name} liked your short`,
+              currentUser?.profileImage
+            );
+          } catch (error) {
+            console.error("Failed to send push notification:", error);
+          }
+        }
       }
     }
     await short.save();
@@ -123,6 +138,20 @@ export const comment = async (req, res) => {
       const receiverSocketId = getSocketId(short?.author?._id);
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("newNotification", populatedNotification);
+      }
+      const targetUser = await User.findById(short?.author?._id);
+      const currentUser = await User.findById(req.userId);
+      if (targetUser?.fcmToken) {
+        try {
+          await sendPushNotification(
+            targetUser.fcmToken,
+            "New Comment",
+            `${currentUser?.name} commented your short`,
+            currentUser?.profileImage
+          );
+        } catch (error) {
+          console.error("Failed to send push notification:", error);
+        }
       }
     }
     await short.save();

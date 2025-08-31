@@ -3,6 +3,7 @@ import uploadOnCloudinary from "../config/cloudinary.js";
 import User from "../models/user.model.js";
 import { getSocketId, io } from "../socket.js";
 import Notification from "../models/notification.model.js";
+import { sendPushNotification } from "../config/firebase.js";
 
 export const uploadPost = async (req, res) => {
   try {
@@ -92,6 +93,20 @@ export const like = async (req, res) => {
             populatedNotification
           );
         }
+        const targetUser = await User.findById(post?.author?._id);
+        const currentUser = await User.findById(req.userId);
+        if (targetUser?.fcmToken) {
+          try {
+            await sendPushNotification(
+              targetUser.fcmToken,
+              "New Like",
+              `${currentUser?.name} liked your post`,
+              currentUser?.profileImage
+            );
+          } catch (error) {
+            console.error("Failed to send push notification:", error);
+          }
+        }
       }
     }
     await post.save();
@@ -142,6 +157,20 @@ export const comment = async (req, res) => {
       const receiverSocketId = getSocketId(post?.author?._id);
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("newNotification", populatedNotification);
+      }
+      const targetUser = await User.findById(post?.author?._id);
+      const currentUser = await User.findById(req.userId);
+      if (targetUser?.fcmToken) {
+        try {
+          await sendPushNotification(
+            targetUser.fcmToken,
+            "New Comment",
+            `${currentUser?.name} commented your post`,
+            currentUser?.profileImage
+          );
+        } catch (error) {
+          console.error("Failed to send push notification:", error);
+        }
       }
     }
 

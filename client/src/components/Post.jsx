@@ -15,6 +15,7 @@ import { toggleFollowUser } from "../utils/followService";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
 import BlueTick from "./BlueTick";
+import { toast } from "react-toastify";
 
 function Post({ post }) {
   const { userData, following } = useSelector((state) => state.user);
@@ -50,6 +51,10 @@ function Post({ post }) {
 
   const handleComment = async () => {
     try {
+      if (comment === "") {
+        toast.error("Type comment");
+        return
+      }
       const result = await axios.post(
         `${serverUrl}/api/post/comment/${post._id}`,
         { message: comment },

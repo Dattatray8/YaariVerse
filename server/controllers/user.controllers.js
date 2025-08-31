@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import uploadOnCloudinary from "../config/cloudinary.js";
 import Notification from "../models/notification.model.js";
 import { getSocketId, io } from "../socket.js";
+import { sendPushNotification } from "../config/firebase.js";
 
 export const getCurrentUser = async (req, res) => {
   try {
@@ -140,6 +141,18 @@ export const follow = async (req, res) => {
             populatedNotification
           );
         }
+        if (targetUser?.fcmToken) {
+          try {
+            await sendPushNotification(
+              targetUser.fcmToken,
+              "New Follow",
+              `${currentUser.name} started following you`,
+              currentUser?.profileImage
+            );
+          } catch (error) {
+            console.error("Failed to send push notification:", error);
+          }
+        }
       }
       await currentUser.save();
       await targetUser.save();
@@ -239,6 +252,26 @@ export const markAsRead = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "Error to marking as read",
+      error: error.message,
+    });
+  }
+};
+
+export const updateFcmToken = async (req, res) => {
+  try {
+    const { fcmToken } = req.body;
+    const user = await User.findById(req.userId).select("-password");
+    if (!user) {
+      return res
+        .status(200)
+        .json({ success: false, message: "User not found" });
+    }
+    await user.updateOne({ fcmToken: fcmToken });
+    await user.save();
+    return res.status(200).json({ message: "FCM token updated successfully" });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error to set fcm token",
       error: error.message,
     });
   }

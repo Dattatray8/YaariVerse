@@ -10,6 +10,7 @@ import {
   markAsRead,
   search,
   suggestedUsers,
+  updateFcmToken,
 } from "../controllers/user.controllers.js";
 import { upload } from "../middlewares/multur.js";
 
@@ -29,5 +30,6 @@ userRouter.get("/followinglist", isAuth, followingList);
 userRouter.get("/search", isAuth, search);
 userRouter.get("/getallnotification", isAuth, getAllNotfications);
 userRouter.post("/markasread", isAuth, markAsRead);
+userRouter.post("/fcmToken", isAuth, updateFcmToken);
 
 export default userRouter;

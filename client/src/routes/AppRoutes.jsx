@@ -24,6 +24,9 @@ import { useEffect } from "react";
 import { useSocket } from "../hooks/useSocket";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationData } from "../redux/userSlice";
+import { generateToken, messaging } from "../notifications/firebase";
+import { onMessage } from "firebase/messaging";
+import { toast } from "react-toastify";
 
 function AppRoutes() {
   useAllPosts();
@@ -57,18 +60,16 @@ function AppRoutes() {
   useEffect(() => {
     socket?.on("newNotification", (noti) => {
       dispatch(setNotificationData([...notificationData, noti]));
-      if (Notification.permission === "granted") {
-        new Notification(`${noti?.sender?.name} ${noti?.message}`, {
-          body: `${getTimeAgo(noti?.createdAt)}`,
-          icon: `${noti?.sender?.profileImage}`,
-        });
-      }
     });
     return () => socket?.off("newNotification");
   }, [socket, dispatch]);
 
   useEffect(() => {
-    Notification.requestPermission();
+    generateToken();
+    onMessage(messaging, (payload) => {
+      console.log(payload);
+      toast.dark(payload?.notification?.body);
+    });
   }, []);
 
   return (

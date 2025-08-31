@@ -9,6 +9,7 @@ import { setMessages, setSelectedUser } from "../redux/chatSlice";
 import SenderMessage from "../components/SenderMessage";
 import ReceiverMessage from "../components/ReceiverMessage";
 import { useSocket } from "../hooks/useSocket";
+import { toast } from "react-toastify";
 
 function Chatting() {
   const { selectedUser, messages } = useSelector((state) => state.chat);
@@ -46,6 +47,10 @@ function Chatting() {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
+    if (input === "") {
+      toast.error("Type a message");
+      return;
+    }
     try {
       const formdata = new FormData();
       formdata.append("message", input);
