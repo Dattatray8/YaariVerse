@@ -68,7 +68,6 @@ function Search() {
         `${serverUrl}/api/user/search?keyword=${keyword}`,
         { withCredentials: true }
       );
-      console.log(res);
       setSearchResults(res?.data?.users);
     } catch (error) {
       console.error("Search error:", error);
@@ -78,7 +77,6 @@ function Search() {
       setLoading(false);
     }
   };
-  console.log(searchResults);
 
   const handleFollow = async (userId) => {
     try {
