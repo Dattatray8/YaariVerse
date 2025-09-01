@@ -192,10 +192,8 @@ export const search = async (req, res) => {
     const users = await User.find({
       _id: { $ne: req.userId },
       $or: [
-        {
-          userName: { $regex: keyword, $options: "i" },
-          name: { $regex: keyword, $options: "i" },
-        },
+        { userName: { $regex: keyword, $options: "i" } },
+        { name: { $regex: keyword, $options: "i" } },
       ],
     }).select("-password");
 

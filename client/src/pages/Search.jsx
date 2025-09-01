@@ -13,6 +13,9 @@ function Search() {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [typeHeadUsers, setTypeHeadUsers] = useState([]);
+  const { suggestedUsers } = useSelector((state) => state.user);
+  const [showTypeHead, setShowTypeHead] = useState(true);
 
   const { following, userData } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -20,9 +23,7 @@ function Search() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (searchTerm.trim()) {
-        searchUsers(searchTerm);
-      } else {
+      if (!searchTerm.trim()) {
         setSearchResults([]);
         setError("");
       }
@@ -31,17 +32,43 @@ function Search() {
     return () => clearTimeout(timeoutId);
   }, [searchTerm]);
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      setShowTypeHead(false);
+      searchUsers(searchTerm);
+    }
+    if (e.key === "Backspace") {
+      setShowTypeHead(false);
+      if (searchTerm === "") {
+        setShowTypeHead(true);
+      }
+    }
+  };
+
+  const typeHead = (value) => {
+    if (value && showTypeHead) {
+      let searchedUsers = suggestedUsers.filter((user) =>
+        (user?.name || user?.userName)
+          .toLowerCase()
+          .includes(value.toLowerCase())
+      );
+      setTypeHeadUsers(searchedUsers);
+    }
+  };
+
   const searchUsers = async (keyword) => {
     if (!keyword.trim()) return;
 
     setLoading(true);
     setError("");
+    setShowTypeHead(false);
 
     try {
       const res = await axios.get(
         `${serverUrl}/api/user/search?keyword=${keyword}`,
         { withCredentials: true }
       );
+      console.log(res);
       setSearchResults(res?.data?.users);
     } catch (error) {
       console.error("Search error:", error);
@@ -51,6 +78,7 @@ function Search() {
       setLoading(false);
     }
   };
+  console.log(searchResults);
 
   const handleFollow = async (userId) => {
     try {
@@ -119,7 +147,7 @@ function Search() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#0a0a0a] to-[#181817] w-full min-h-[100vh] flex flex-col">
+    <div className="bg-gradient-to-br from-[#0a0a0a] to-[#181817] w-full min-h-[100vh] flex flex-col overflow-x-hidden">
       <div className="w-full p-4 flex items-center min-h-16 sm:h-20 border-b border-gray-800/50">
         <ArrowLeft
           className="text-white h-5 w-5 sm:h-6 sm:w-6 cursor-pointer hover:text-blue-400 transition-colors flex-shrink-0"
@@ -136,7 +164,11 @@ function Search() {
         <div className="w-5 h-5 sm:w-6 sm:h-6"></div>
       </div>
 
-      <div className="px-4 sm:px-6 py-4 sm:py-6">
+      <div
+        className={`px-4 sm:px-6 pt-4 sm:pt-6${
+          showTypeHead ? "pb-1" : " pb-4  sm:pb-6"
+        }`}
+      >
         <div className="relative max-w-2xl mx-auto">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -148,7 +180,10 @@ function Search() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+            onClick={() => {
+              searchUsers(searchTerm);
+            }}
           >
             <path d="m21 21-4.34-4.34" />
             <circle cx="11" cy="11" r="8" />
@@ -157,7 +192,13 @@ function Search() {
             type="text"
             placeholder="Search by username or name..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchTerm(value);
+              setShowTypeHead(true);
+              typeHead(value);
+            }}
+            onKeyDown={handleKeyPress}
             className="w-full bg-gray-800/50 border border-gray-700/50 rounded-2xl pl-10 sm:pl-12 pr-4 py-3 sm:py-4 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300 text-base sm:text-lg"
           />
           {loading && (
@@ -168,7 +209,7 @@ function Search() {
         </div>
       </div>
 
-      <div className="px-4 sm:px-6 flex-1 pb-6">
+      <div className="px-4 sm:px-6 flex-1 pb-6 flex justify-center overflow-x-hidden">
         {error && (
           <div className="text-center py-8 sm:py-12">
             <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 sm:p-6 max-w-sm sm:max-w-md mx-auto">
@@ -179,22 +220,68 @@ function Search() {
           </div>
         )}
 
-        {!loading && !error && searchTerm && searchResults.length === 0 && (
-          <div className="text-center py-8 sm:py-12">
-            <div className="bg-gray-800/30 rounded-xl p-6 sm:p-8 max-w-sm sm:max-w-md mx-auto">
-              <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">🔍</div>
-              <p className="text-gray-300 font-medium mb-2 text-base sm:text-lg">
-                No users found
-              </p>
-              <p className="text-gray-500 text-sm leading-relaxed">
-                Try searching with different keywords for "{searchTerm}"
-              </p>
+        {!loading &&
+          !error &&
+          searchTerm &&
+          searchResults.length === 0 &&
+          typeHeadUsers.length === 0 &&
+          !showTypeHead && (
+            <div className="text-center py-8 sm:py-12">
+              <div className="bg-gray-800/30 rounded-xl p-6 sm:p-8 max-w-sm sm:max-w-md mx-auto">
+                <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">🔍</div>
+                <p className="text-gray-300 font-medium mb-2 text-base sm:text-lg">
+                  No users found
+                </p>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  Try searching with different keywords for "{searchTerm}"
+                </p>
+              </div>
             </div>
+          )}
+
+        {typeHeadUsers.length > 0 && searchTerm && showTypeHead && (
+          <div className="w-full max-w-2xl h-fit bg-gray-900/95 border border-gray-700/50 rounded-xl shadow-lg overflow-hidden z-20">
+            <ul className="divide-y divide-gray-700/40">
+              {typeHeadUsers.map((user) => (
+                <li
+                  key={user._id}
+                  className="flex items-center gap-3 p-3 hover:bg-gray-800/70 transition-colors cursor-pointer"
+                  onClick={() => {
+                    setSearchTerm(user.userName);
+                    setShowTypeHead(false);
+                    setTypeHeadUsers([]);
+                    searchUsers(user.userName);
+                  }}
+                >
+                  <img
+                    src={user.profileImage || userImg}
+                    alt="User Avatar"
+                    className="w-8 h-8 rounded-full object-cover border border-gray-600"
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-white font-medium text-sm">
+                      {user.userName}
+                    </span>
+                    <span className="text-gray-400 text-xs">{user.name}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
-        {!loading && searchResults.length > 0 && (
-          <div className="max-w-4xl mx-auto">
+        {typeHeadUsers.length === 0 && searchTerm && showTypeHead && (
+          <div className="w-full max-w-2xl h-fit bg-gray-900/95 border border-gray-700/50 rounded-xl shadow-lg overflow-hidden z-20">
+            <ul className="divide-y divide-gray-700/40">
+              <li className="flex items-center gap-3 p-3 hover:bg-gray-800/70 transition-colors cursor-pointer text-white justify-center">
+                No users found
+              </li>
+            </ul>
+          </div>
+        )}
+
+        {!loading && searchResults.length > 0 && !showTypeHead && (
+          <div className="max-w-2xl mx-auto w-full">
             <div className="mb-4 sm:mb-6 text-center">
               <p className="text-gray-400 text-sm sm:text-base">
                 Found{" "}
